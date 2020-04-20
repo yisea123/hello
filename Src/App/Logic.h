@@ -1,6 +1,6 @@
 /*
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: yfs
  * @Date: 2020-02-03 17:45:21
  * @LastEditors  : yfs
@@ -30,6 +30,7 @@
 typedef struct//系统任务队列
 {
     LogicParaDef TestTask;
+    LogicParaDef ResetTask;	/*系统复位逻辑*/
 } Task;
 
 extern Task LogicTask;

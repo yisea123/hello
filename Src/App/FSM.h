@@ -15,24 +15,24 @@ typedef enum
     D_RESET,  	  //3源码中使用出现重复定义，需要后期打包后可以正常使用
     SCRAM,    	  //4
     PAUSE,    	  //5
-	ERRSTOP,  	  //6 错误停机
+    ERRSTOP,  	  //6 错误停机
 
 } RunStatus;
 //命令事件
 typedef enum
 {
-	STOP_EVENT = 1,  //停止事件
-	RUN_EVENT,
-	RESET_EVENT,
-	SCRAM_EVENT,
-	PAUSE_EVENT,
-	ERR_EVENT,   //错误报警事件
+    STOP_EVENT = 1,  //停止事件
+    RUN_EVENT,
+    RESET_EVENT,
+    SCRAM_EVENT,
+    PAUSE_EVENT,
+    ERR_EVENT,   //错误报警事件
 
 } RunCMD;
 
 
 /****************状态机列表***************/
-typedef struct 
+typedef struct
 {
     RunCMD event; 		   // 事件
     RunStatus CurState;    // 当前状态
@@ -43,7 +43,7 @@ extern FsmTable_type Fsm_table[]; //使用的状态表
 
 
 /****************状态机类***************/
-typedef struct FSM_t 
+typedef struct FSM_t
 {
     int curState;				//当前状态  (不要在外部更改)
     FsmTable_type* pFsmTable;  //状态机需要维护的列表

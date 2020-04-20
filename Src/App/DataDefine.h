@@ -50,35 +50,35 @@ typedef struct
 //轴速度配置
 typedef struct AxSpd_t
 {
-	float  startspeed;  //unit/s
-	float  acctime;		//ms
-	float  runspeed;	//unit/s
-	float  dectime;		//ms
-	float  endspeed;	//unit/s
-}AxspdDef;
+    float  startspeed;  //unit/s
+    float  acctime;		//ms
+    float  runspeed;	//unit/s
+    float  dectime;		//ms
+    float  endspeed;	//unit/s
+} AxspdDef;
 
 //轴回零配置
-typedef struct AxHome_t	
+typedef struct AxHome_t
 {
-	u32	orgnum;			 	//原点
-	u16 orglev;			 	//原点信号电平
+    u32	orgnum;			 	//原点
+    u16 orglev;			 	//原点信号电平
     u16 homemode;		 	//回零模式
-	float homespeedfast;    //unit/s 回零快速
-	float homespeedslow;  	//unit/s 回零慢速
-	float homespeedoffset; 	//unit/s 零点偏移
-}AxHomeDef;
+    float homespeedfast;    //unit/s 回零快速
+    float homespeedslow;  	//unit/s 回零慢速
+    float homespeedoffset; 	//unit/s 零点偏移
+} AxHomeDef;
 
 //轴限位配置
 typedef struct AxLimit_t
 {
-	u16 limitMode;		//限位模式：0 没限位 1 软件限位 2 硬件限位 3 软硬都限
-	u16	alarmmode;		//轴报警口配置
+    u16 limitMode;		//限位模式：0 没限位 1 软件限位 2 硬件限位 3 软硬都限
+    u16	alarmmode;		//轴报警口配置
     u16 poslimitsig;    //正限位信号
     u16 poslimitlev;    //限位信号电平
     u16 neglimitsig;    //负限位信号
     u16 neglimitlev;    //负限位信号电平
     float softminlimit;   //软负限位 unit
-    float softmaxlimit;   //软正限位 unit 
+    float softmaxlimit;   //软正限位 unit
 } AxislimitDef;
 
 //轴单位转换
@@ -86,16 +86,16 @@ typedef struct AxisConversion_t
 {
     u32 PPR;	//每转脉冲数
     float MPR;	//每转毫米__导程
-} AxisConversion; 
+} AxisConversion;
 
 //轴参数类
 typedef struct AxisPara_t
 {
-    AxspdDef AxSpd;             //10个寄存器 
+    AxspdDef AxSpd;             //10个寄存器
     AxHomeDef Axhomecfg;        //10个寄存器
     AxislimitDef Axlimitcfg;    //10个寄存器
     AxisConversion Axconver;    //4个寄存器
-}AxisData;
+} AxisData;
 
 
 
@@ -181,7 +181,7 @@ typedef union {
                     {
                         u32 RunCommand;		//1500  0 初始状态 1停止 2 运行 3 复位 4 急停 5暂停 6下载态
                         u32 res[9];
-                    } Button; //留10个int 的空间 
+                    } Button; //留10个int 的空间
 
                 } Data;
             } User;
@@ -194,13 +194,13 @@ typedef union {
                 u16 Data_16[SYSSAVELEN / 2];
                 struct
                 {
-                    AxisData axis[MAXAXISNUM];       //轴的运行参数 34*50  2000-3699 
-                    struct 
+                    AxisData axis[MAXAXISNUM];       //轴的运行参数 34*50  2000-3699
+                    struct
                     {   //3700-3719
                         u32 checkflag;  //初始化检测，当新板块没写过数据或是数据不是规定值时，需要初始化modbus的存储寄存器初值，防止出现新卡上电全ff或数据清空后，导致的撞机等意外情况。初始化过数据后写0xea
                         u32 res[9];     //预留，用做锁机时间等
-                    }SaveCheck;
-                    
+                    } SaveCheck;
+
                 } Data;
             } Sys;
 
@@ -211,7 +211,7 @@ typedef union {
                 {
 
                     u32 usersavedata[10]; //4000-4019
-					u32 abcd;	//4020 
+                    u32 abcd;	//4020
                 } Data;
             } User;
         } Save;

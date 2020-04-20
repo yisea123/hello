@@ -42,24 +42,28 @@ extern int Decrypt(char* word,char* s,int len);
 extern int Encrypt( char* word, char* s,int len);
 
 extern void	HZ_AxMotion(void);
-extern void HZ_ModBus(u32 port,char ModbusLocalID);
+extern void HZ_ModBus(u32 port,char ModbusLocalID); //ModbusLocalID 请默认填1
 extern void HZ_TimerThread(void);
 extern void	HZ_FlashOperate(void);
-extern void	HZ_JogOperate(void);
+//m_axnum 主卡轴数	
+extern void HZ_JogOperate(int M_Axnum);
 extern void HZ_Alarm(void);
 extern void init_config(void* GlobalData,u32* err,void* flah,u32 datalen,u32 writelen,u32 readlen,u32 savelen);
 extern s32 HZ_Data_Read(void);
+extern s32 HZ_BkData_Read(void);
 extern s32 HZ_Data_Write(void);
+extern s32 HZ_BkData_Write(void);
+
 
 
 //对外接口
 
-#define	SYSTIMERNUM	50
+#define	SYSTIMERNUM	100
 extern u32	sysTimer[SYSTIMERNUM];
-#define	USERTIMERNUM	50
+#define	USERTIMERNUM	200
 extern u32	UserTimer[USERTIMERNUM];
-#define	TRIGERNUM	50
-#define	TIMER_NUM	50
+#define	TRIGERNUM	200
+#define	TIMER_NUM	200
 extern u8	TrigerFlag[TRIGERNUM];
 extern u32	TrigerTimer[TRIGERNUM];
 extern unsigned char  flagbuf[TIMER_NUM];
@@ -132,6 +136,14 @@ extern s32 HZ_AxSetLimSoft(u8 AxNum,\
 extern s32 HZ_AxSetHomMod(u8 AxNum,u8 Mod);
 //AxNum :轴号 AlmLev: 0，1 电平性质  其他：报警口不生效
 extern s32 HZ_AxSetAlm(u8 AxNum,u8 AlmLev);
-//重置轴速度 AxNum :轴号  Spd:运行速度
+//重新加载运行速度
 extern s32 HZ_AxReloadSpd(u8 AxNum,u32 Spd);
+//获取当前速度
+extern s32 HZ_AxGetSpd(u8 AxNum);
+
+/****************回调函数，用户使用时，外部实现***************/
+ void ex_inputupdata(void);
+ void ex_outputstatusupdata(void);
+ void ex_outputupdata(void);
+
 #endif

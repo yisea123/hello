@@ -49,7 +49,7 @@
             <InvalidFlash>1</InvalidFlash>
           </TargetStatus>
           <OutputDirectory>.\Objects\</OutputDirectory>
-          <OutputName>8axis</OutputName>
+          <OutputName>App</OutputName>
           <CreateExecutable>1</CreateExecutable>
           <CreateLib>0</CreateLib>
           <CreateHexFile>1</CreateHexFile>
@@ -82,7 +82,7 @@
           <AfterMake>
             <RunUserProg1>0</RunUserProg1>
             <RunUserProg2>0</RunUserProg2>
-            <UserProg1Name></UserProg1Name>
+            <UserProg1Name>C:\Keil_v5\ARM\ARMCC\bin\fromelf.exe  --bin -o  ..\MDK-Proj\Objects\Download.bin ..\MDK-Proj\Objects\App.axf</UserProg1Name>
             <UserProg2Name></UserProg2Name>
             <UserProg1Dos16Mode>0</UserProg1Dos16Mode>
             <UserProg2Dos16Mode>0</UserProg2Dos16Mode>
@@ -312,7 +312,7 @@
           </ArmAdsMisc>
           <Cads>
             <interw>1</interw>
-            <Optim>4</Optim>
+            <Optim>7</Optim>
             <oTime>0</oTime>
             <SplitLS>0</SplitLS>
             <OneElfS>1</OneElfS>
@@ -338,7 +338,7 @@
               <MiscControls></MiscControls>
               <Define></Define>
               <Undefine></Undefine>
-              <IncludePath>..\Src\App;..\Src\Config;..\Src\drv;..\Src\Tool;..\LIB;..\Src\common</IncludePath>
+              <IncludePath>..\Src\App;..\Src\Config;..\Src\drv;..\Src\Tool;..\Src\common;..\LIB</IncludePath>
             </VariousControls>
           </Cads>
           <Aads>
@@ -431,6 +431,16 @@
               <FileName>DisDriver.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\Src\drv\DisDriver.c</FilePath>
+            </File>
+            <File>
+              <FileName>TouchButton.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\drv\TouchButton.c</FilePath>
+            </File>
+            <File>
+              <FileName>Axis_OP.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\Src\drv\Axis_OP.c</FilePath>
             </File>
           </Files>
         </Group>
@@ -546,19 +556,19 @@
               <FilePath>..\LIB\Algorithm_ver_00_01_07.lib</FilePath>
             </File>
             <File>
-              <FileName>BspLibA8I24O24_V00.00.01.lib</FileName>
-              <FileType>4</FileType>
-              <FilePath>..\LIB\BspLibA8I24O24_V00.00.01.lib</FilePath>
-            </File>
-            <File>
               <FileName>can_master.lib</FileName>
               <FileType>4</FileType>
               <FilePath>..\LIB\can_master.lib</FilePath>
             </File>
             <File>
-              <FileName>INTERLAYER_VER01_10_05.lib</FileName>
+              <FileName>BspLibA8I24O24_V00_01_01.lib</FileName>
               <FileType>4</FileType>
-              <FilePath>..\LIB\INTERLAYER_VER01_10_05.lib</FilePath>
+              <FilePath>..\LIB\BspLibA8I24O24_V00_01_01.lib</FilePath>
+            </File>
+            <File>
+              <FileName>INTERLAYER_VER01_10_06.lib</FileName>
+              <FileType>4</FileType>
+              <FilePath>..\LIB\INTERLAYER_VER01_10_06.lib</FilePath>
             </File>
           </Files>
         </Group>

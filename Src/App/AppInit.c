@@ -1,6 +1,6 @@
 /*
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: yfs
  * @Date: 2019-12-27 09:17:32
  * @LastEditors  : yfs
@@ -26,6 +26,8 @@ u8 uart_sendbuf[2][300];        //定义通讯接收和发送缓存
 u8 uart_recvbuf[2][300];
 u8 eth_txbuf[300];
 u8 eth_rxbuf[300];
+u8 EXI_ID[EXINUM] = {0,1}; //扩展I板ID
+u8 EXQ_ID[EXQNUM] = {0,1}; //扩展Q板ID
 
 /****************项目使用结构的实例或声明***************/
 
@@ -35,16 +37,16 @@ u8 eth_rxbuf[300];
  * @author: yfs
  * @Date: 2020-01-14 16:50:27
  * @description: 板卡初次上电flash全-1数据需要初始化
- * @para: 
- * @return: 
+ * @para:
+ * @return:
  */
 void DataInit()
 {
-	memset(&GSS,0,sizeof(GSS));
-	memset(&GUS,0,sizeof(GUS));
-	/*
-	此处添加初始化存储区数据，保证初次上电没使用的数据安全
-	*/
+    memset(&GSS,0,sizeof(GSS));
+    memset(&GUS,0,sizeof(GUS));
+    /*
+    此处添加初始化存储区数据，保证初次上电没使用的数据安全
+    */
     GSS.SaveCheck.checkflag = 0xea;
     HZ_Data_Write();
 }
@@ -52,10 +54,36 @@ void DataInit()
 void initIO(void)
 {
     int i;
-    for (i = 0; i < 24; i++) //初始化 输出口
+    for (i = 0; i < GPO_NUM; i++) //初始化 输出口
         OutPut_SetSta(i, OFF);
     for (i = 0; i < PULS_NUM; i++) //轴口使能,电平和普通输出相反
         EN_SetSta(i, 1);
+}
+
+/*
+* 轴初始化参数
+*/
+void AxisConfigInit(void)
+{
+	int i;
+	for(i = 0;i<PULS_NUM;i++)
+	{
+		/*回原点参数*/
+		GSS.axis[i].Axhomecfg.homemode = GOHOMETYPE1;
+		GSS.axis[i].Axhomecfg.orgnum = i;
+		GSS.axis[i].Axhomecfg.orglev = 0;
+		GSS.axis[i].Axhomecfg.homespeedfast = 1000;
+		GSS.axis[i].Axhomecfg.homespeedslow = 500;
+		GSS.axis[i].Axhomecfg.homespeedoffset = 0;
+		/*轴运动速度参数*/
+		GSS.axis[i].AxSpd.startspeed = 1000;
+		GSS.axis[i].AxSpd.acctime = 100;
+		GSS.axis[i].AxSpd.runspeed = 2000;
+		GSS.axis[i].AxSpd.dectime = 100;
+		GSS.axis[i].AxSpd.endspeed = 500;
+		/*限位模式*/
+		GSS.axis[i].Axlimitcfg.alarmmode = 2;
+	}
 }
 
 void AppInit()
@@ -70,9 +98,10 @@ void AppInit()
     }
 
     initIO();
-
+	/*初始化轴参数*/
+	AxisConfigInit();
     //初始化轴配置
-   
+    AxisConfig(GSS.axis);
 
     GSR.HardWare_Ver[0] = 2019724;
     GUR.HaveToReset = 1;
