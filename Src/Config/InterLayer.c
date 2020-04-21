@@ -13,7 +13,7 @@ void InterLayer()
     RTC_Get_Time(&GSR.time.hour, &GSR.time.min, &GSR.time.sec, &GSR.time.ampm);
     RTC_Get_Date(&GSR.date.year, &GSR.date.month, &GSR.date.day, &GSR.date.week);
     //每次更新轴参数
-    AxisConfig(GSS.axis);
+//    AxisConfig(GSS.axis);
     //底层轴动流程
     HZ_AxMotion();
     //底层算法运行
@@ -43,12 +43,23 @@ void InterLayer()
 void Axis_pos()
 {
     int i;
+	/*主卡部分轴状态*/
     for(i = 0; i < PULS_NUM; i++)
     {
         GSR.AxisPosition[i] = HZ_AxGetCurPos(i);
         GSR.AxisUnitPosition[i] = PulseToUserUnit(&GSS.axis[i].Axconver, GSR.AxisPosition[i]);
         GSR.AXSTA[i] = HZ_AxGetStatus(i);
     }
+#if	USE_EXBOARD
+	/*扩展卡部分轴状态，这里使用的16~20为扩展卡轴使用*/
+	for(i = 16;i<21;i++)
+	{
+		GSR.AxisPosition[i] = HZ_ExAxGetCurPos(i-16);
+		GSR.AxisUnitPosition[i] = PulseToUserUnit(&GSS.axis[i].Axconver, GSR.AxisPosition[i]);
+		GSR.AXSTA[i] = HZ_ExAxGetStatus(i-16);
+	}
+#endif
+	
     for(i = 0; i < 4; i++)
     {
         GSR.AxisEncoder[i] = EnCode_Get32(i);
@@ -99,7 +110,6 @@ void JogGo(u8 axisnum, s32 pos, u32 spd)
             }
         }
     }
-
 }
 //系统点动停止调用函数
 void jogstop(u32 axisnum)
@@ -113,7 +123,7 @@ void joghome(u32 axisnum)
     HZ_AxReset(axisnum);
     HZ_AxHome(axisnum);
 }
-#if 1
+
 /**
 * @author  yang
 * @Description: 扩展卡输入输出状态的Modbus更新，当Modbus咨询到指定地址后调用
@@ -125,6 +135,7 @@ int EX_INPUT[EXINUM][32];
 int EX_OUTPUT[EXQNUM][32];
 void ex_inputupdata()
 {
+#if	USE_EXBOARD
     u8 i;
     //扩展板1： 16I16O 扩展板
     GSR.InputStatus[4] = 0;
@@ -169,12 +180,14 @@ void ex_inputupdata()
         GSR.InputStatus[12] |= (u32) EX_INPUT[2][i] << i;
     }
 #endif
+#endif
 }
 /*
 ** 更新扩展输出板输出口状态
 */
 void ex_outputstatusupdata()
 {
+#if	USE_EXBOARD
     u8 i;
     //扩展输出板1
     GSW.OutputStatus[4] = 0;
@@ -198,12 +211,14 @@ void ex_outputstatusupdata()
         GSW.OutputStatus[8]	|= (u32)EX_OUTPUT[1][i]	<<	i;
 	}
 #endif
+#endif
 }
 /*
 ** 更新输出板状态
 */
 void ex_outputupdata()
 {
+#if	USE_EXBOARD
     u8 i;
     //扩展输出板1
     for(i = 0; i < 16; i ++)
@@ -225,5 +240,6 @@ void ex_outputupdata()
 		HZ_ExOutPutSet(EXQ_ID[1],i,EX_OUTPUT[1][i]);
 	}
 #endif
-}
 #endif
+}
+

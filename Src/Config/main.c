@@ -48,16 +48,13 @@ int main()
     systeminit();
     AppInit();          //user初始化，通常将数据和io轴等外设初始化
 	
-	/*
-	* 检查CAN口的连接状态，如果未使用板间通讯功能则注释掉
-	*/
-#if 1
+/* 检查CAN口的连接状态*/
+#if USE_EXBOARD
     while(2 != HZ_ExCanNetStateGet())
     {
         systemexec();   //系统轮询
     }
 #endif
-
     while (1)
     {
         systemexec();   //系统轮询

@@ -11,6 +11,7 @@
 void AxisConfig(AxisData axis[])
 {
     int i;
+	/*设置限位*/
     for (i = 0; i < PULS_NUM; i++)
     {
         switch (axis[i].Axlimitcfg.limitMode)
@@ -36,8 +37,11 @@ void AxisConfig(AxisData axis[])
             HZ_AxSetLimSoft(i, 0, axis[i].Axlimitcfg.softmaxlimit, 0, axis[i].Axlimitcfg.softminlimit);
             break;
         }
+		/*设置回零模式*/
         HZ_AxSetHomMod(i, axis[i].Axhomecfg.homemode);
+		/*设置轴报警*/
         HZ_AxSetAlm(i, axis[i].Axlimitcfg.alarmmode);
+		/*设置轴运动参数*/
 		HZ_AxSetPara(i,axis[i].AxSpd.startspeed,axis[i].AxSpd.acctime,\
 					axis[i].AxSpd.runspeed,axis[i].AxSpd.dectime,axis[i].AxSpd.endspeed,\
 					axis[i].Axhomecfg.homespeedfast,\

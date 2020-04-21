@@ -13,6 +13,9 @@
 #define uart_485 1
 #define uart_232 2
 
+/*是否使用扩展版*/
+#define USE_EXBOARD		1
+
 void  InterLayer(void);
 
 #endif

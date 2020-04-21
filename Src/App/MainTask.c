@@ -31,8 +31,7 @@ Dis_drv usr_dis =
 /*触摸屏操作IO口输出参数*/
 TouchButtonTaskDef TouchButtonPara = 
 {
-	&GUW.Button.res[0],
-	&GUW.Button.res[1],
+	&GUW.Button.ButtonPress,
 	&SysFsm.curState,
 };
 
@@ -41,8 +40,8 @@ DrawTaskParaDef DrawTaskPara =
 {
 	&SysFsm.curState,
 	{0},
-	&GUW.Button.res[2],
-	0,
+	&GUW.DrawPara.DrawMode,
+	GUW.DrawPara.Para,
 };
 
 void MainTask(void)

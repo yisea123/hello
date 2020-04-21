@@ -31,7 +31,7 @@ void Reset()
 			LogicTask.ResetTask.step = 1;
 			break;
 		case 1:
-			if(TimerCnt(LogicTask.ResetTask) > 1000)
+			if(TimerCnt(LogicTask.ResetTask) > 100)
 			{
 				/*如果系统还存在错误*/
 				if(GSR.ErrorLevel > 0)
