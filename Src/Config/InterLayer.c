@@ -2,7 +2,11 @@
 #include "Algorithm.h"
 #include "AxisMove.h"
 #include "EXIQ.h"
-//AxisGroupDataDef xyline;
+#include "Algorithm.h"
+
+#if 1
+AxisGroupDataDef xyline;
+#endif
 
 void Axis_pos(void);
 
@@ -17,8 +21,15 @@ void InterLayer()
     //底层轴动流程
     HZ_AxMotion();
     //底层算法运行
+#if 0
     HZ_MultiAxMotion();
-//  MoveInterXyRUN(&xyline);
+#else
+	xyline.MPR[0] = GSS.axis[0].Axconver.MPR;
+	xyline.MPR[1] = GSS.axis[1].Axconver.MPR;
+	xyline.PPR[0] = GSS.axis[0].Axconver.PPR;
+	xyline.PPR[1] = GSS.axis[1].Axconver.PPR;
+	MoveInterXyRUN(&xyline);
+#endif
     //modbus通讯流程
     HZ_ModBus(uart_232, 1);
     HZ_ModBus(eth, 1);
@@ -27,7 +38,11 @@ void InterLayer()
     //配合地址表中的flash操作
     HZ_FlashOperate();
     //底层点动函数
-    HZ_JogOperate(PULS_NUM);
+#if USE_EXBOARD
+    HZ_JogOperate(21);
+#else
+	HZ_JogOperate(PULS_NUM);
+#endif
     //地址表中的报警函数
     HZ_Alarm();
     //获取轴当前状态
@@ -110,18 +125,76 @@ void JogGo(u8 axisnum, s32 pos, u32 spd)
             }
         }
     }
+#if USE_EXBOARD
+	if(axisnum>15||axisnum<21)
+	{
+		 if(pos > 0)	//正向点动
+        {
+            if(AXSTA_ERRSTOP == HZ_ExAxGetStatus(axisnum-16))
+            {
+                //只有下限错误
+                if(0 == (0x0fff & HZ_ExAxGetErr(axisnum-16)))
+                {
+                    HZ_AxReset(axisnum);
+                    HZ_ExAxMoveRel(axisnum-16,pos);
+                }
+            } else {
+                //没有报警,正常运动
+                HZ_ExAxMoveRel(axisnum-16,pos);
+            }
+        }
+        else	//反向点动
+        {
+            if(AXSTA_ERRSTOP == HZ_ExAxGetStatus(axisnum-16))
+            {
+                //只有上限错误
+                if(0 == (0xf0ff & HZ_ExAxGetErr(axisnum-16)))
+                {
+                    HZ_AxReset(axisnum);
+                    HZ_ExAxMoveRel(axisnum-16,pos);
+                }
+            } else {
+                //没有报警,正常运动
+                HZ_ExAxMoveRel(axisnum-16,pos);
+            }
+        }
+	}
+#endif
 }
 //系统点动停止调用函数
 void jogstop(u32 axisnum)
 {
+	
 //    HZ_AxStop(axisnum);
-    HZ_AxStopDec(axisnum);
+#if USE_EXBOARD
+	if(axisnum<16)
+	{
+		HZ_AxStopDec(axisnum);
+	}
+	else
+		HZ_ExAxStopDec(axisnum-16);
+#else
+	HZ_AxStopDec(axisnum);
+#endif
 }
 //系统回零调用函数
 void joghome(u32 axisnum)
 {
-    HZ_AxReset(axisnum);
+#if USE_EXBOARD
+	if(axisnum<16)
+	{
+		HZ_AxReset(axisnum);
+		HZ_AxHome(axisnum);
+	}
+	else
+	{
+		HZ_AxReset(axisnum);
+		HZ_ExAxHome(axisnum-16);
+	}
+#else
+	HZ_AxReset(axisnum);
     HZ_AxHome(axisnum);
+#endif  
 }
 
 /**

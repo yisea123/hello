@@ -29,19 +29,20 @@ Dis_drv usr_dis =
     ZMOTOR,
 };
 /*触摸屏操作IO口输出参数*/
-TouchButtonTaskDef TouchButtonPara = 
+TouchButtonTaskDef TouchButtonPara =
 {
-	&GUW.Button.ButtonPress,
-	&SysFsm.curState,
+    &GUW.Button.ButtonPress,
+    &SysFsm.curState,
 };
 
 /*画图参数*/
-DrawTaskParaDef DrawTaskPara = 
+DrawTaskParaDef DrawTaskPara =
 {
-	&SysFsm.curState,
-	{0},
-	&GUW.DrawPara.DrawMode,
-	GUW.DrawPara.Para,
+    &SysFsm.curState,
+	DSTOP,
+    {0},
+    &GUW.DrawPara.DrawMode,
+    GUW.DrawPara.Para,
 };
 
 void MainTask(void)
@@ -50,28 +51,37 @@ void MainTask(void)
     FSM(&GUW.Button.RunCommand,&SysFsm);  //状态机轮询
 
     Logic();       //设备运行逻辑
-    Reset();       //设备复位逻辑？
+    Reset();       //设备复位逻辑
     Teach();       //ui操作逻辑
-
-	/*任务*/
-	TouchButtonFunc(&TouchButtonPara);
+#if 1
+    /*任务*/
+    TouchButtonFunc(&TouchButtonPara);
+    
+    /*机台动作流程*/
 	DrawTask(&DrawTaskPara);
-	/*机台动作流程*/
-    //Dis_Process(&usr_dis);
+#endif
 
 }
-
+/***********状态切换实现的回调*************/
 void run_handle(void)
 {
-    usr_dis.Start(&usr_dis);
+	DrawTaskStart(&DrawTaskPara);
 }
 
 void stop_handle(void)
 {
-    usr_dis.Stop(&usr_dis);
+	DrawTaskStop(&DrawTaskPara);
 }
 
 void reset_handle(void)
 {
-	LogicTask.ResetTask.execute = 1;
+    LogicTask.ResetTask.execute = 1;
+}
+
+void  scram_handle(void)
+{
+	for(int i = 0; i < PULS_NUM; i++)
+	{
+		HZ_AxStop(i);
+	}
 }

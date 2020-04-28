@@ -11,9 +11,6 @@
 #include "USERTOOL.H"
 #include "stdlib.h"
 
-/**************************************************************************/
-/* 自己封装的函数 */
-/**************************************************************************/
 /**************************************************************************
 * @author: 
 * @Date:
@@ -39,7 +36,7 @@ void AxSetSpdRatio(s8 axnum, float spd)
 * @author: 
 * @Date:
 * @Description: 控制单轴运动：相对位置、绝对位置、回零、停轴
-* @param: axnum:轴号	mode:模式  spd: 速度 pos:位置
+* @param: axnum:轴号	mode:模式  spd: 速度 pos:位置用户单位
 * @return :
 ***************************************************************************/
 void AxisRun(s8 axnum, s8 mode, float spd, float pos)
@@ -66,15 +63,75 @@ void AxisRun(s8 axnum, s8 mode, float spd, float pos)
     }
 }
 
-/**************************************************************************
-* @author: 
-* @Date:
-* @Description: 扩展卡点动函数
-* @param: 
-* @return :
-***************************************************************************/
-void JogGoFunc(void)
+/*插补函数*/
+//#include "MultiAxis.h"
+extern AxisGroupDataDef xyline;
+void MoveLineNode(PointfDef point, int speed)
 {
+    float start;
+    float acc;
+    float workspeed;
+    float dec;
 	
+	acc =  500;
+	start = 60;
+	dec = 500;
+    
+    workspeed = speed;
+
+    PointfDef p1;
+    PointfDef p2;
+    p2.x = point.x;
+    p2.y = point.y;
+    p2.z = point.z;
+    p1.x = PulseToUserUnit(&GSS.axis[0].Axconver, HZ_AxGetCurPos(0));
+    p1.y = PulseToUserUnit(&GSS.axis[1].Axconver, HZ_AxGetCurPos(1));
+    p1.z = PulseToUserUnit(&GSS.axis[2].Axconver, HZ_AxGetCurPos(2));
+    AxGroupMoveXYLine(0, 1, 2,  p1,  p2, start, acc, workspeed, dec, start, &xyline);
+}
+void MoveArcNode(PointfDef point1, PointfDef point2, int speed)
+{
+    PointfDef p1, p2, p3;
+    float start;
+    float acc;
+    float workspeed;
+    float dec;
+   
+	start = 100;
+	acc = 800;
+	workspeed = speed;
+	dec = acc;
+
+    p1.x = PulseToUserUnit(&GSS.axis[0].Axconver, HZ_AxGetCurPos(0));
+    p1.y = PulseToUserUnit(&GSS.axis[1].Axconver, HZ_AxGetCurPos(1));
+    p2.x = point1.x;
+    p2.y = point1.y;
+    p3.x = point2.x;
+    p3.y = point2.y;
+
+    AxGroupMoveXYCir(0, 1,  p1,  p2, p3, start, acc, workspeed, dec, start, &xyline);
+
+}
+void MoveCir(PointfDef point1, PointfDef point2, int speed)
+{
+    PointfDef p1, p2, p3;
+    float start;
+    float acc;
+    float workspeed;
+    float dec;
+    
+	start = 60;
+	acc = 500;
+	workspeed = speed;
+	dec = acc;
+    
+    p1.x = PulseToUserUnit(&GSS.axis[0].Axconver, HZ_AxGetCurPos(0));
+    p1.y = PulseToUserUnit(&GSS.axis[1].Axconver, HZ_AxGetCurPos(1));
+    p2.x = point1.x;
+    p2.y = point1.y;
+    p3.x = point2.x;
+    p3.y = point2.y;
+
+    AxGroupMoveXYCircle(0, 1,  p1,  p2, p3, start, acc, workspeed, dec, start, &xyline);
 }
 

@@ -15,22 +15,17 @@
 #include "can_master.h"
 
 /*板卡标识号*/
-#if 0
+#if USE_BOOT
 const uint32_t Code_Versions __attribute__((at(0x08040800))) = 0xA08;
-#else
-const uint32_t Code_Versions __attribute__((section(".ARM.__at_0x08040800"))) = 0xA08;
 #endif
-
 //系统初始化
 void systeminit()
 {
-	/*
-	* 系统初始化函数，如果使用U盘下载，将1改为0
-	*/
-#if 1
-    sys_init();
-#else
+/*系统初始化函数，如果使用U盘下载,将宏改为1*/
+#if USE_BOOT
     sys_init_IAP();
+#else
+	sys_init();
 #endif
     bsp_init();
     bsp_exec();

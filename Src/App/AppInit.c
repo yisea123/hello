@@ -65,25 +65,53 @@ void initIO(void)
 */
 void AxisConfigInit(void)
 {
-	int i;
-	for(i = 0;i<PULS_NUM;i++)
+    int i;
+    for(i = 0; i<PULS_NUM; i++)
+    {
+        /*回原点参数*/
+        GSS.axis[i].Axhomecfg.homemode = GOHOMETYPE1;
+        GSS.axis[i].Axhomecfg.orgnum = i;
+        GSS.axis[i].Axhomecfg.orglev = 0;
+        GSS.axis[i].Axhomecfg.homespeedfast = 5000;
+        GSS.axis[i].Axhomecfg.homespeedslow = 2000;
+        GSS.axis[i].Axhomecfg.homespeedoffset = 0;
+        /*轴运动速度参数*/
+        GSS.axis[i].AxSpd.startspeed = 1000;
+        GSS.axis[i].AxSpd.acctime = 100;
+        GSS.axis[i].AxSpd.runspeed = 5000;
+        GSS.axis[i].AxSpd.dectime = 100;
+        GSS.axis[i].AxSpd.endspeed = 1000;
+        /*限位模式*/
+        GSS.axis[i].Axlimitcfg.alarmmode = 2;
+
+		/*脉冲和导程*/
+		GSS.axis[i].Axconver.MPR = 16;
+		GSS.axis[i].Axconver.PPR = 4000;
+    }
+#if USE_EXBOARD
+	for(i = 16;i<21;i++)
 	{
 		/*回原点参数*/
-		GSS.axis[i].Axhomecfg.homemode = GOHOMETYPE1;
-		GSS.axis[i].Axhomecfg.orgnum = i;
-		GSS.axis[i].Axhomecfg.orglev = 0;
-		GSS.axis[i].Axhomecfg.homespeedfast = 1000;
-		GSS.axis[i].Axhomecfg.homespeedslow = 500;
-		GSS.axis[i].Axhomecfg.homespeedoffset = 0;
-		/*轴运动速度参数*/
-		GSS.axis[i].AxSpd.startspeed = 1000;
-		GSS.axis[i].AxSpd.acctime = 100;
-		GSS.axis[i].AxSpd.runspeed = 2000;
-		GSS.axis[i].AxSpd.dectime = 100;
-		GSS.axis[i].AxSpd.endspeed = 500;
-		/*限位模式*/
-		GSS.axis[i].Axlimitcfg.alarmmode = 2;
+        GSS.axis[i].Axhomecfg.homemode = GOHOMETYPE1;
+        GSS.axis[i].Axhomecfg.orgnum = i;
+        GSS.axis[i].Axhomecfg.orglev = 0;
+        GSS.axis[i].Axhomecfg.homespeedfast = 1000;
+        GSS.axis[i].Axhomecfg.homespeedslow = 500;
+        GSS.axis[i].Axhomecfg.homespeedoffset = 0;
+        /*轴运动速度参数*/
+        GSS.axis[i].AxSpd.startspeed = 1000;
+        GSS.axis[i].AxSpd.acctime = 100;
+        GSS.axis[i].AxSpd.runspeed = 2000;
+        GSS.axis[i].AxSpd.dectime = 100;
+        GSS.axis[i].AxSpd.endspeed = 500;
+        /*限位模式*/
+        GSS.axis[i].Axlimitcfg.alarmmode = 2;
+		/*脉冲和导程*/
+		GSS.axis[i].Axconver.MPR = 16;
+		GSS.axis[i].Axconver.PPR = 4000;
 	}
+	
+#endif
 }
 
 void AppInit()
@@ -98,8 +126,8 @@ void AppInit()
     }
 
     initIO();
-	/*初始化轴参数*/
-	AxisConfigInit();
+    /*初始化轴参数*/
+    AxisConfigInit();
     //初始化轴配置
     AxisConfig(GSS.axis);
 

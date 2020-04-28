@@ -180,14 +180,14 @@ typedef union {
                     struct
                     {
                         u32 RunCommand;		//1500  0 初始状态 1停止 2 运行 3 复位 4 急停 5暂停 6下载态
-						u32 ButtonPress;	/*1502 按键按下*/
+                        u32 ButtonPress;	/*1502 按键按下*/
                         u32 res[8];
                     } Button; //留10个int 的空间
-					struct
-					{
-						u32 DrawMode;	/*1520 画图模式*/
-						int Para[9]; 	/*1522~1538*/
-					}DrawPara;
+                    struct
+                    {
+                        u32 DrawMode;	/*1520 画图模式*/
+                        float Para[9]; 	/*1522~1538*/
+                    } DrawPara;
 
                 } Data;
             } User;

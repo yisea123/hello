@@ -28,6 +28,9 @@ void bsp_init()
 
 void bsp_exec()
 {
+#if 0
+	FSMC_FPGA_Exec();
+#endif
     //USART1ÊÕ·¢
     UART_exeu();
     //ÒÔÌ«ÍøÂÖÑ¯

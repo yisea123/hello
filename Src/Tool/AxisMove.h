@@ -10,7 +10,7 @@
 #define __AXISMOVE_H
 #include "logic.h"
 #include "disdriver.h"
-
+#include "algorithm.h"
 
 #define GROUP0 		0
 #define GROUP1		1
@@ -45,7 +45,7 @@ enum {
 	
 };
 
-#if 0
+#if 1
 
 typedef enum
 {
@@ -53,8 +53,8 @@ typedef enum
     AX_ERR_AX_TMOUT = (1 << 1),		//超时（回原点）
     AX_ERR_UP_LIM_H = (1 << 8),		//硬上限位
     AX_ERR_UP_LIM_S = (1 << 9),		//软上限位
-    AX_ERR_DW_LIM_H = (1 << 12),		//硬下限位
-    AX_ERR_DW_LIM_S = (1 << 13),		//软下限位
+    AX_ERR_DW_LIM_H = (1 << 12),	//硬下限位
+    AX_ERR_DW_LIM_S = (1 << 13),	//软下限位
 } AxErrBitTp;
 
 typedef enum
@@ -79,7 +79,10 @@ typedef enum	//轴动模式选择
 /*
 * 对外接口
 */
+////#include "MultiAxis.h"
 void AxSetSpdRatio(s8 axnum, float spd);
 void AxisRun(s8 axnum, s8 mode, float spd, float pos);
-
+void MoveLineNode(PointfDef point, int speed);
+void MoveArcNode(PointfDef point1, PointfDef point2, int speed);
+void MoveCir(PointfDef point1, PointfDef point2, int speed);
 #endif

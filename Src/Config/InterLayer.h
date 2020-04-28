@@ -15,6 +15,9 @@
 
 /*是否使用扩展版*/
 #define USE_EXBOARD		1
+/*是否使用BOOT程序*/
+#define USE_BOOT		0
+
 
 void  InterLayer(void);
 

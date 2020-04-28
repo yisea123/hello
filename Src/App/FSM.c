@@ -92,10 +92,10 @@ void FSM_StateTransfer(FSM_type* pFsm, int state)
 {
     pFsm->curState = state;
 }
-
-int FSM_GetState(FSM_type Fsm)
+/*获取当前状态*/
+int FSM_GetState(const FSM_type *Fsm)
 {
-    return Fsm.curState;
+    return Fsm->curState;
 }
 
 /*事件处理*/

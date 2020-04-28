@@ -57,7 +57,7 @@ extern FSM_type SysFsm;           //实例的状态机
 
 void InitFsm(FSM_type* DeFsm);
 void FSM(u32* Event,FSM_type* dfsm);
-
+int FSM_GetState(const FSM_type *Fsm);
 /****************callback function***************/
 //状态切换时，会启用的回调函数，根据需求在此处填写
 //停止
