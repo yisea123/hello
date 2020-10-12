@@ -2,10 +2,8 @@
 #define __BSPLIB_H
 
 #include "stdint.h"
-#define __weak __attribute__((weak))
 
 
-//V00.01.00
 typedef int64_t  s64;
 typedef int32_t  s32;
 typedef int16_t s16;
@@ -20,9 +18,10 @@ typedef uint8_t  u8;
 
 //系统初始化	//上电先调用此函数
 extern void sys_init(void);
-extern void sys_init_IAP(void);		
+extern void sys_init_IAP(void);		//iap程序
 //IAP功能循环体
-extern void IAP_Loop(void);
+void IAP_Loop(void);
+
 
 //这是给出去的
 #define UART_NUM			2
@@ -50,6 +49,7 @@ extern s32 Uart_Send(u32 num,void *buf,u32 len);
 extern u32 Uart_Recv(u32 num,void *buf);
 
 //以太网
+
 //以太网接收
 //return 0:未接收，其他：接收数据长度
 extern u32 Eth_Recv(void);
@@ -72,31 +72,9 @@ extern void Eth_SetLoc(u8 ip_HH,u8 ip_HL,u8 ip_LH,u8 ip_LL,u16 port);
 //return 	:0:成功 其他:失败
 extern s32 Eth_Init(void * rx_buf,u32 rx_Maxlen);
 
-
-extern u32 Eth_Recv_Tcp(void);
-extern s32 Eth_Send_Tcp(u8 * tx_buf,u32 tx_len);
-//fun 		:以太网接口初始化
-//rx_buf	:接收缓冲区
-//rx_Maxlen	:接收缓冲区最大长度
-//u32 checkonlineFlg :是否检测启用掉线检测，0：不检测，其他：检测(200MS检测一次)
-//return 	:0:成功 其他:失败
-extern s32 Eth_Init_Tcp(void * rx_buf,u32 rx_Maxlen,u32 checkonlineFlg);
-
-//需要定期轮询的函数
-extern void Eth_excu_Tcp(void);
-
-
-//LWIP初始化(LWIP启动的时候使用)
-//返回值:0,成功
-//      1,内存错误
-//      2,LAN8720初始化失败
-//      3,网卡添加失败.
-//设置IP等信息后，首先需要调用此网口初始化，再调用tcp或udp初始化
-extern u8 lwip_comm_init(void); 
-
 //USB(FAT32文件系統)
-extern void USB_Mass_Init(void);
-extern void USB_Mass_exec(void);
+void USB_Mass_Init(void);
+void USB_Mass_exec(void);
 
 
 
@@ -226,20 +204,20 @@ extern s32 Flash_ReadBkData(void *buf,u32 size);
 
 //ADC
 //ADC初始化
-extern void Adc_Init(void);
+//extern void Adc_Init(void);
 //获得ADC值
 //ch:通道值 0~16
 //return:转换结果
-extern u16  Adc_Get_Val(u8 ch); 				//获得某个通道值 
+//extern u16  Adc_Get_Val(u8 ch); 				//获得某个通道值 
 //获取进50次平均值
-extern u16 Adc_Get_Avg(u8 ch);				//得到某个通道给一定次数采样的平均值  
+//extern u16 Adc_Get_Avg(u8 ch);				//得到某个通道给一定次数采样的平均值  
 
 //DAC
 
-void Dac_Init(void);		//DAC通道1初始化	 
+//void Dac_Init(void);		//DAC通道1初始化	 
 //设置通道1输出电压
 //val:0~4095,代表0~10V
-extern s32 Dac_SetVal(u8 ch,u16 Val);
+//extern s32 Dac_SetVal(u8 ch,u16 Val);
 
 //RTC
 //RTC初始化
@@ -272,7 +250,7 @@ extern s32 RTCGetBkSramData(u32 offset,void *tar,u32 size);
 
 extern void pwr_init(void);
 extern void pwr_exec(void);
-extern int pwr_Task(void);	//外部实现（需要在外部实现的函数）
+extern s32 pwr_Task(void);	//外部实现（需要在外部实现的函数）
 
 //脉冲设置
 
@@ -287,16 +265,6 @@ extern u32 Puls_GetRun(u8 num);
 extern s32 Puls_SetSpd(u8 num,u32 spd);
 //慎用(仅用于运动中改变行程)
 extern u32 Puls_SetRun(u8 num,u32 steps);
-//ECODE 编码器
-//硬件初始化
-extern void EnCode_Init(void);
-//需要轮询的执行函数
-extern void EnCode_Exec(void);
-//获取对应编码器32位计数
-extern s32 EnCode_Get32(u8 num);
-//设置编码器计数值（不推荐使用）
-extern void EnCode_SetVal(u8 num,s32 val);
-
 //FILE 文件操作
 
 
@@ -342,29 +310,40 @@ extern u8 File_Delete(char * name,u32 num);
 //		其他： 列表地址
 extern char* File_List(char * name);
 
-//20190802 zwg
-//选择存储介质，默认U盘
-//Obj	0：优盘，1：nandflash
-extern void File_SelObj(u8 Obj);
+
+void FM25L64B_Init(void);
+void FM25L64B_Write_Enable(void);  		//写使能 
+void FM25L64B_Write_Disable(void);		//写保护
+void FM25L64B_Read(u8* pBuffer,u32 ReadAddr,u16 NumByteToRead);   //读取flash
+void FM25L64B_Write(u8* pBuffer,u32 WriteAddr,u16 NumByteToWrite);//写入flash
+
+//获取FRAM的操作状态 :0 可操作 其他忙
+u8 FRAM_GetSta(void);
+//writeaddr:开始写入的地址
+//writebuff:数据存储区
+//length:写入的字节数
+u8 FRam_Write(u32 writeaddr, void* writebuff, u32 size);
+//readaddr:开始读取的地址
+//readbuff:数据存储区
+//length:读取的字节数
+u8 FRam_Read(u32 readaddr, void* Readbuff, u32 size);
+void FRam_Exec(void);
+
+
 
 
 //Plus
-#define PULS_NUM				8			//脉冲（轴）数量
+#define PULS_NUM				12			//脉冲（轴）数量
 
 //ECode
-#define ECD_NUM					4			//编码器数量
+#define ECD_NUM					0			//编码器数量
 #define ECD_FLUSH_INTERVAL		1000		//编码器32位更新间隔，0.1ms(并不需要很高频率，只需要在16位溢出时间之内更新一次就好)
 
 
 //GPIO
-#define GPI_NUM					24	//I个数
-#define GPO_NUM					24	//Q数量
+#define GPI_NUM					26	//I个数
+#define GPO_NUM					26	//Q数量
 
-
-/****************华丽分割线***************/
-/** 
-  * @brief wanghao function  
-  */ 
 
 
 

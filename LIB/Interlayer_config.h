@@ -118,6 +118,10 @@ extern s32 HZ_AxSetPara(u8 AxNum,\
 				u32 Start,u32 TAcc,u32 Run,u32 TDec,u32 End,\
 				u32 HomFast,u32 HomSlow,u32 HomOffset,\
 				u32 TorS,u32 HomTimeOut);
+//设置速度曲线
+extern s32 HZ_AxSetCurve(u8 AxNum,u32 Start, u32 TAcc, u32 Run, u32 TDec, u32 End,u32 TorS);
+//设置轴回原点参数
+extern s32 HZ_AxSetHomePara(u8 AxNum,u8 HomSigNum,u8 HomSigLev,u8 Mod,s32 fast,s32 slow,s32 offset);
 //设置轴信号参数
 extern s32 HZ_AxSetAxiSig(u8 AxNum,\
 					u8 HomSigEn,u8 HomSigNum,u8 HomSigLev,\
@@ -140,6 +144,9 @@ extern s32 HZ_AxSetAlm(u8 AxNum,u8 AlmLev);
 extern s32 HZ_AxReloadSpd(u8 AxNum,u32 Spd);
 //获取当前速度
 extern s32 HZ_AxGetSpd(u8 AxNum);
+
+extern void AxDirCfg(u8 Axnum,int val);
+extern void AxHome_Motion(u8 n);
 
 /****************回调函数，用户使用时，外部实现***************/
  void ex_inputupdata(void);

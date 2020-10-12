@@ -1,3 +1,0 @@
-'c:\Users\52928\.vscode\extensions\cl.eide-1.1.4\bin\ARM\objcopy.exe' --update-section ER_IROM1='d:\Doc\Project\VSCode\8axis\.\out\8axis.bin' 'd:\Doc\Project\VSCode\8axis\.\out\8axis.axf' 'd:\Doc\Project\VSCode\8axis\.\out\8axis.elf'
-'c:\Users\52928\.vscode\extensions\cl.eide-1.1.4\bin\ARM\objcopy.exe' --update-section ER_IROM1='d:\Doc\Project\Code\MDK-Proj\Objects\8axis.bin' 'd:\Doc\Project\Code\MDK-Proj\Objects\8axis.axf'  
-'d:\Doc\Project\Code\MDK-Proj\Objects\8axis.elf'
