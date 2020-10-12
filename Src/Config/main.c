@@ -6,7 +6,6 @@
  * @LastEditors  : yfs
  * @LastEditTime : 2020-02-03 10:56:46
  */
-//#include "bsp.h"
 #include "interlayer.h"
 #include "bsp_config.h"
 #include "appinit.h"
@@ -30,6 +29,7 @@ void systeminit()
     bsp_init();
     bsp_exec();
 }
+
 //系统轮询
 void systemexec()
 {
@@ -43,13 +43,6 @@ int main()
     systeminit();
     AppInit();          //user初始化，通常将数据和io轴等外设初始化
 	
-/* 检查CAN口的连接状态*/
-#if USE_EXBOARD
-    while(2 != HZ_ExCanNetStateGet())
-    {
-        systemexec();   //系统轮询
-    }
-#endif
     while (1)
     {
         systemexec();   //系统轮询
@@ -61,7 +54,6 @@ int main()
 //系统掉电处理函数，100ms内
 int pwr_Task(void)
 {
-    //delay_ms(1000);
     HZ_Data_Write();
     return 0;
 }

@@ -42,5 +42,6 @@ void DrawTask(DrawTaskParaDef *DrawTaskPara);
 void DrawTaskStart(DrawTaskParaDef *DrawTaskPara);
 /*ÈÎÎñÍ£Ö¹*/
 void DrawTaskStop(DrawTaskParaDef *DrawTaskPara);
+	void toil(void);
 #endif	//"Axis_OP.h"
 

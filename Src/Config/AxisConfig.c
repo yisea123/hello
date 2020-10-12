@@ -43,44 +43,32 @@ void AxisConfig(AxisData axis[])
         HZ_AxSetHomMod(i, axis[i].Axhomecfg.homemode);
 		/*设置轴报警*/
         HZ_AxSetAlm(i, axis[i].Axlimitcfg.alarmmode);
-		/*设置轴运动参数*/
-		HZ_AxSetPara(i,axis[i].AxSpd.startspeed,axis[i].AxSpd.acctime,\
-					axis[i].AxSpd.runspeed,axis[i].AxSpd.dectime,axis[i].AxSpd.endspeed,\
-					axis[i].Axhomecfg.homespeedfast,\
-					axis[i].Axhomecfg.homespeedslow,axis[i].Axhomecfg.homespeedoffset,0,0);
     }
 #if USE_EXBOARD
-	for(i = 16;i<21;i++)
+	for(int i = 16;i<21;i++)
 	{
-		switch (axis[i].Axlimitcfg.limitMode)
+		switch (GSS.axis[i].Axlimitcfg.limitMode)
         {
         case 0: //没有限位
-            HZ_ExAxSetHomMod(i-16,1,i-16,0,0);
-            HZ_ExAxSetLimit_S(i-16, 0, axis[i].Axlimitcfg.softmaxlimit, 0, axis[i].Axlimitcfg.softminlimit);
+            HZ_ExAxSetLimit_H(i-16,0,0,0,0,0,0);
+            HZ_ExAxSetLimit_S(i-16, GSS.axis[i].Axlimitcfg.softmaxlimit,0, GSS.axis[i].Axlimitcfg.softminlimit,0);
             break;
         case 1: //只有软件限位
-            HZ_AxSetAxiSig(i, 1, axis[i].Axhomecfg.orgnum, axis[i].Axhomecfg.orglev, 0, 0, 0, 0, 0, 0);
-            HZ_AxSetLimSoft(i, 1, axis[i].Axlimitcfg.softmaxlimit, 1, axis[i].Axlimitcfg.softminlimit);
+			HZ_ExAxSetLimit_H(i-16,0,0,0,0,0,0);
+            HZ_AxSetLimSoft(i, GSS.axis[i].Axlimitcfg.softmaxlimit, 1, GSS.axis[i].Axlimitcfg.softminlimit, 1);
             break;
         case 2: //只有硬件限位
-            HZ_AxSetAxiSig(i, 1, axis[i].Axhomecfg.orgnum,axis[i].Axhomecfg.orglev,
-                           1, axis[i].Axlimitcfg.poslimitsig,  axis[i].Axlimitcfg.poslimitlev,
-                           1, axis[i].Axlimitcfg.neglimitsig, axis[i].Axlimitcfg.neglimitlev);
-            HZ_AxSetLimSoft(i, 0, axis[i].Axlimitcfg.softmaxlimit, 0, axis[i].Axlimitcfg.softminlimit);
+            HZ_ExAxSetLimit_H(i-16,1,GSS.axis[i].Axlimitcfg.poslimitsig,GSS.axis[i].Axlimitcfg.poslimitlev,1,GSS.axis[i].Axlimitcfg.neglimitsig,GSS.axis[i].Axlimitcfg.neglimitlev);
+            HZ_ExAxSetLimit_S(i-16, GSS.axis[i].Axlimitcfg.softmaxlimit,0, GSS.axis[i].Axlimitcfg.softminlimit,0);
             break;
         case 3: //两种限位都有效
-            HZ_AxSetAxiSig(i, 1, axis[i].Axhomecfg.orgnum,axis[i].Axhomecfg.orglev,
-                           1, axis[i].Axlimitcfg.poslimitsig,  axis[i].Axlimitcfg.poslimitlev,
-                           1, axis[i].Axlimitcfg.neglimitsig, axis[i].Axlimitcfg.neglimitlev);
-            HZ_AxSetLimSoft(i, 0, axis[i].Axlimitcfg.softmaxlimit, 0, axis[i].Axlimitcfg.softminlimit);
+            HZ_AxSetLimSoft(i, GSS.axis[i].Axlimitcfg.softmaxlimit, 1, GSS.axis[i].Axlimitcfg.softminlimit, 1);
+			HZ_ExAxSetLimit_H(i-16,1,GSS.axis[i].Axlimitcfg.poslimitsig,GSS.axis[i].Axlimitcfg.poslimitlev,1,GSS.axis[i].Axlimitcfg.neglimitsig,GSS.axis[i].Axlimitcfg.neglimitlev);
             break;
         }
-		/*设置轴运动参数*/
-		HZ_ExAxSetPara(i-16,axis[i].AxSpd.startspeed,axis[i].AxSpd.acctime,\
-					axis[i].AxSpd.runspeed,axis[i].AxSpd.dectime,axis[i].AxSpd.endspeed,\
-					axis[i].Axhomecfg.homespeedfast,\
-					axis[i].Axhomecfg.homespeedslow,axis[i].Axhomecfg.homespeedoffset,0,0);
-	
+		/*设置原点信号和模式*/
+		HZ_ExAxSetHomMod(i-16,1,i-16,0,0);
 	}
 #endif
+
 }

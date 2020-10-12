@@ -17,7 +17,7 @@ void InterLayer()
     RTC_Get_Time(&GSR.time.hour, &GSR.time.min, &GSR.time.sec, &GSR.time.ampm);
     RTC_Get_Date(&GSR.date.year, &GSR.date.month, &GSR.date.day, &GSR.date.week);
     //每次更新轴参数
-//    AxisConfig(GSS.axis);
+    AxisConfig(GSS.axis);
     //底层轴动流程
     HZ_AxMotion();
     //底层算法运行
@@ -38,11 +38,7 @@ void InterLayer()
     //配合地址表中的flash操作
     HZ_FlashOperate();
     //底层点动函数
-#if USE_EXBOARD
-    HZ_JogOperate(21);
-#else
 	HZ_JogOperate(PULS_NUM);
-#endif
     //地址表中的报警函数
     HZ_Alarm();
     //获取轴当前状态
@@ -75,7 +71,7 @@ void Axis_pos()
 	}
 #endif
 	
-    for(i = 0; i < 4; i++)
+    for(i = 0; i < ECD_NUM; i++)
     {
         GSR.AxisEncoder[i] = EnCode_Get32(i);
     }
@@ -89,11 +85,79 @@ void Axis_pos()
 * @param --
 * @return --
 */
+void Forward(AxisData axis[], u32 Jog, u32 spd)//	电机正反转控制函数
+		{
+			int i=1;
+			if(i<PULS_NUM)
+			{
+				 AxSetSpdRatio(i,spd);
+				HZ_AxSetAxiSig(i, 1, GSS.axis[i].Axhomecfg.orgnum, 0,
+				1, GSS.axis[i].Axlimitcfg.poslimitsig, GSS.axis[i].Axlimitcfg.poslimitlev, 
+				1,GSS.axis[i].Axlimitcfg.neglimitsig,GSS.axis[i].Axlimitcfg.neglimitlev);
+				if(Jog==1)//					电机正转
+				{
+				   if(HZ_AxGetStatus(i)==AXSTA_ERRSTOP)
+				    {
+					    HZ_AxReset(i);
+				    }
+				    if (HZ_AxGetStatus(i)==AXSTA_READY)
+				     { 
+						    HZ_AxMoveRel(i,1000);
+					   }
+				 }
+				if(Jog==2)//					电机反转
+				{
+				   if(HZ_AxGetStatus(i)==AXSTA_ERRSTOP)
+				    {							
+					    HZ_AxReset(i);
+				     }
+				    if (HZ_AxGetStatus(i)==AXSTA_READY)
+				     { 
+						    HZ_AxMoveRel(i,-1000);
+					   }
+				 }
+			}
+		}
+void gohome(u32 home)//	轴回零按键控制函数
+{
+	int i=0;
+	if(home==1)
+	{
+	  HZ_AxSetAxiSig(i, 1, GSS.axis[i].Axhomecfg.orgnum, 0,
+		1, GSS.axis[i].Axlimitcfg.poslimitsig, GSS.axis[i].Axlimitcfg.poslimitlev, 
+		1,GSS.axis[i].Axlimitcfg.neglimitsig,GSS.axis[i].Axlimitcfg.neglimitlev);
+	  HZ_AxHome(i);
+	}
+}
+void stop(u32 stop)//	轴停止按键控制函数
+{
+	int i=0;
+	if(stop==1)
+	HZ_AxStop(i);
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 void JogGo(u8 axisnum, s32 pos, u32 spd)
 {
-    AxSetSpdRatio(axisnum,spd);
+    
     if(axisnum<PULS_NUM)	//只有主卡部分点动函数
     {
+		AxSetSpdRatio(axisnum,spd);
         if(pos > 0)	//正向点动
         {
             if(AXSTA_ERRSTOP == HZ_AxGetStatus(axisnum))
@@ -126,8 +190,9 @@ void JogGo(u8 axisnum, s32 pos, u32 spd)
         }
     }
 #if USE_EXBOARD
-	if(axisnum>15||axisnum<21)
+	if(axisnum>15)
 	{
+		Ex_AxSetSpdRatio(axisnum-16,100);
 		 if(pos > 0)	//正向点动
         {
             if(AXSTA_ERRSTOP == HZ_ExAxGetStatus(axisnum-16))
@@ -135,7 +200,7 @@ void JogGo(u8 axisnum, s32 pos, u32 spd)
                 //只有下限错误
                 if(0 == (0x0fff & HZ_ExAxGetErr(axisnum-16)))
                 {
-                    HZ_AxReset(axisnum);
+//                    HZ_AxReset(axisnum);
                     HZ_ExAxMoveRel(axisnum-16,pos);
                 }
             } else {
@@ -150,7 +215,7 @@ void JogGo(u8 axisnum, s32 pos, u32 spd)
                 //只有上限错误
                 if(0 == (0xf0ff & HZ_ExAxGetErr(axisnum-16)))
                 {
-                    HZ_AxReset(axisnum);
+//                    HZ_AxReset(axisnum);
                     HZ_ExAxMoveRel(axisnum-16,pos);
                 }
             } else {
@@ -172,7 +237,7 @@ void jogstop(u32 axisnum)
 		HZ_AxStopDec(axisnum);
 	}
 	else
-		HZ_ExAxStopDec(axisnum-16);
+		HZ_ExAxStop(axisnum-16);
 #else
 	HZ_AxStopDec(axisnum);
 #endif
@@ -188,7 +253,7 @@ void joghome(u32 axisnum)
 	}
 	else
 	{
-		HZ_AxReset(axisnum);
+//		HZ_AxReset(axisnum);
 		HZ_ExAxHome(axisnum-16);
 	}
 #else
@@ -210,34 +275,34 @@ void ex_inputupdata()
 {
 #if	USE_EXBOARD
     u8 i;
-    //扩展板1： 16I16O 扩展板
+    //扩展板1： 五轴扩展板
     GSR.InputStatus[4] = 0;
     GSR.InputStatus[5] = 0;
     GSR.InputStatus[6] = 0;
     GSR.InputStatus[7] = 0;
 	/*获取扩展卡的输入值*/
-	for(i = 0;i<16;i++)
+	for(i = 0;i<20;i++)
 	{
 		EX_INPUT[0][i] = HZ_ExInPutGet(EXI_ID[0],i);
 	}
 	/*更新寄存器值*/
-    for(i = 0; i < 16; i++)
+    for(i = 0; i < 20; i++)
     {
         GSR.InputStatus[4] |= (u32) EX_INPUT[0][i] << i;
     }
 #if 1
-    //扩展卡2：五轴卡
+    //扩展卡2：I16O16
     GSR.InputStatus[8] = 0;
     GSR.InputStatus[9] = 0;
     GSR.InputStatus[10] = 0;
     GSR.InputStatus[11] = 0;
 	/*获取扩展卡的输入值*/
-	for(i = 0;i<20;i++)
+	for(i = 0;i<16;i++)
 	{
 		EX_INPUT[1][i] = HZ_ExInPutGet(EXI_ID[1],i);
 	}
 	/*更新寄存器值*/
-    for(i = 0; i < 20; i++)
+    for(i = 0; i < 16; i++)
     {
         GSR.InputStatus[8] |= (u32) EX_INPUT[1][i] << i;
     }
@@ -266,7 +331,7 @@ void ex_outputstatusupdata()
     GSW.OutputStatus[4] = 0;
 	for(i = 0;i<16;i++)
 	{
-		EX_OUTPUT[0][i] = HZ_ExOutPutGet(EXQ_ID[0],i+16);
+		EX_OUTPUT[0][i] = HZ_ExOutPutGet(EXQ_ID[0],i);
 	}
     for(i = 0; i < 16; i ++)
 	{
@@ -277,7 +342,7 @@ void ex_outputstatusupdata()
     GSW.OutputStatus[8] = 0;
     for(i = 0;i<16;i++)
 	{
-		EX_OUTPUT[1][i] = HZ_ExOutPutGet(EXQ_ID[1],i);
+		EX_OUTPUT[1][i] = HZ_ExOutPutGet(EXQ_ID[1],i+16);
 	}
     for(i = 0; i < 16; i ++)
 	{
@@ -300,7 +365,7 @@ void ex_outputupdata()
 	}
 	for(i = 0;i<16;i++)
 	{
-		HZ_ExOutPutSet(EXQ_ID[0],i+16,EX_OUTPUT[0][i]);
+		HZ_ExOutPutSet(EXQ_ID[0],i,EX_OUTPUT[0][i]);
 	}
 #if 1
     //扩展输出板2
@@ -310,7 +375,7 @@ void ex_outputupdata()
 	}
 	for(i = 0;i<16;i++)
 	{
-		HZ_ExOutPutSet(EXQ_ID[1],i,EX_OUTPUT[1][i]);
+		HZ_ExOutPutSet(EXQ_ID[1],i+16,EX_OUTPUT[1][i]);
 	}
 #endif
 #endif

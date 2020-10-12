@@ -18,9 +18,10 @@
 /*是否使用BOOT程序*/
 #define USE_BOOT		0
 
-
 void  InterLayer(void);
-
+void Forward(AxisData axis[], u32, u32);
+void gohome(u32 home);
+void stop(u32 stop);
 #endif
 
 

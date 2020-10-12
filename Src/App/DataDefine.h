@@ -118,7 +118,7 @@ typedef union {
                     u16 AXSTA[MAXAXISNUM];		  //50-99	轴状态
                     float AxisUnitPosition[MAXAXISNUM];  //100-199 用户单位的当前位置
                     s32 AxisPosition[MAXAXISNUM]; //200-299	轴当前位置
-                    u32 AxisEncoder[5];			  //300-309	轴当前状态
+                    u32 AxisEncoder[5];			  //300-309 编码器值
                     u32 InputStatus[40];		  //310-389	输入口状态
                     u32 ErrorCode[20];			  //390-	错误码
                     u32 ErrorLevel;				  //430-	错误等级
@@ -181,12 +181,16 @@ typedef union {
                     {
                         u32 RunCommand;		//1500  0 初始状态 1停止 2 运行 3 复位 4 急停 5暂停 6下载态
                         u32 ButtonPress;	/*1502 按键按下*/
-                        u32 res[8];
+                        u32 ButtonPress1;//互斥的两个按键
+											u32 res[4];//				位置参数
+											u32 pause;//				记录暂停的位置
+											u32 button[2];//		按键状态
+											u32 dir;
                     } Button; //留10个int 的空间
                     struct
                     {
                         u32 DrawMode;	/*1520 画图模式*/
-                        float Para[9]; 	/*1522~1538*/
+                        float Para[8];/*1522~1538*/
                     } DrawPara;
 
                 } Data;

@@ -19,6 +19,7 @@
 
 #include "AppInit.h"
 #include "Algorithm.h"
+#include "bsp_config.h"
 
 //变量声明  所有app程序的初始变量实例及声明
 GlobalDataDef GlobalData = {0}; //定义用户通讯数据库
@@ -58,6 +59,20 @@ void initIO(void)
         OutPut_SetSta(i, OFF);
     for (i = 0; i < PULS_NUM; i++) //轴口使能,电平和普通输出相反
         EN_SetSta(i, 1);
+#if USE_EXBOARD
+	/*初始化扩展板输出口*/
+	for(i = 0;i<16;i++)
+	{
+		HZ_ExOutPutSet(0,i,OFF);
+		HZ_ExOutPutSet(1,i+16,OFF);
+	}
+	/*扩展板轴口使能*/
+	for(i = 0;i<5;i++)
+	{
+		HZ_ExEnSet(0,i,1);
+	}
+	
+#endif
 }
 
 /*
@@ -72,40 +87,29 @@ void AxisConfigInit(void)
         GSS.axis[i].Axhomecfg.homemode = GOHOMETYPE1;
         GSS.axis[i].Axhomecfg.orgnum = i;
         GSS.axis[i].Axhomecfg.orglev = 0;
-        GSS.axis[i].Axhomecfg.homespeedfast = 5000;
-        GSS.axis[i].Axhomecfg.homespeedslow = 2000;
-        GSS.axis[i].Axhomecfg.homespeedoffset = 0;
-        /*轴运动速度参数*/
-        GSS.axis[i].AxSpd.startspeed = 1000;
-        GSS.axis[i].AxSpd.acctime = 100;
-        GSS.axis[i].AxSpd.runspeed = 5000;
-        GSS.axis[i].AxSpd.dectime = 100;
-        GSS.axis[i].AxSpd.endspeed = 1000;
+			
         /*限位模式*/
         GSS.axis[i].Axlimitcfg.alarmmode = 2;
-
-		/*脉冲和导程*/
-		GSS.axis[i].Axconver.MPR = 16;
-		GSS.axis[i].Axconver.PPR = 4000;
+		   GSS.axis[i].Axlimitcfg.limitMode = 2;
+		   GSS.axis[i].Axlimitcfg.poslimitsig=19;
+			GSS.axis[i].Axlimitcfg.neglimitsig=18;
+			 GSS.axis[i].Axlimitcfg.neglimitlev=0;
+		   GSS.axis[i].Axlimitcfg.poslimitlev=0;
+		    /*脉冲和导程*/
+		   GSS.axis[i].Axconver.MPR = 16;
+		   GSS.axis[i].Axconver.PPR = 4000;
     }
 #if USE_EXBOARD
+	/*扩展板轴参数*/
 	for(i = 16;i<21;i++)
 	{
 		/*回原点参数*/
         GSS.axis[i].Axhomecfg.homemode = GOHOMETYPE1;
         GSS.axis[i].Axhomecfg.orgnum = i;
         GSS.axis[i].Axhomecfg.orglev = 0;
-        GSS.axis[i].Axhomecfg.homespeedfast = 1000;
-        GSS.axis[i].Axhomecfg.homespeedslow = 500;
-        GSS.axis[i].Axhomecfg.homespeedoffset = 0;
-        /*轴运动速度参数*/
-        GSS.axis[i].AxSpd.startspeed = 1000;
-        GSS.axis[i].AxSpd.acctime = 100;
-        GSS.axis[i].AxSpd.runspeed = 2000;
-        GSS.axis[i].AxSpd.dectime = 100;
-        GSS.axis[i].AxSpd.endspeed = 500;
         /*限位模式*/
         GSS.axis[i].Axlimitcfg.alarmmode = 2;
+		GSS.axis[i].Axlimitcfg.limitMode = 0;
 		/*脉冲和导程*/
 		GSS.axis[i].Axconver.MPR = 16;
 		GSS.axis[i].Axconver.PPR = 4000;
@@ -116,6 +120,8 @@ void AxisConfigInit(void)
 
 void AppInit()
 {
+	
+	
     //配置地址表完成modbus
     init_config(&GlobalData, GSR.ErrorCode, &GlobalData.SpaceType.Save, GLOBALDATALEN, USERWRITELEN, USERREADLEN, USERSAVELEN);
 
@@ -124,10 +130,14 @@ void AppInit()
     {
         DataInit();
     }
-
+	/* 检查CAN口的连接状态*/
+#if USE_EXBOARD
+    while(2 != HZ_ExCanNetStateGet())
+    {
+        bsp_exec();   //系统轮询
+    }
+#endif
     initIO();
-    /*初始化轴参数*/
-    AxisConfigInit();
     //初始化轴配置
     AxisConfig(GSS.axis);
 
@@ -136,4 +146,5 @@ void AppInit()
 
     //初始化状态机，将设备状态初始是错误停
     InitFsm(&SysFsm);
+		AxisConfigInit();
 }

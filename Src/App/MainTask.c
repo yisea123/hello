@@ -20,6 +20,7 @@
 #include "TouchButton.h"
 #include "Axis_OP.h"
 
+#if 0
 Dis_drv usr_dis =
 {
     gINIT,
@@ -28,10 +29,14 @@ Dis_drv usr_dis =
     YMOTOR,
     ZMOTOR,
 };
+#endif
+
+
 /*触摸屏操作IO口输出参数*/
 TouchButtonTaskDef TouchButtonPara =
 {
     &GUW.Button.ButtonPress,
+		&GUW.Button.ButtonPress1,
     &SysFsm.curState,
 };
 
@@ -59,6 +64,8 @@ void MainTask(void)
     
     /*机台动作流程*/
 	DrawTask(&DrawTaskPara);
+	toil();//走正方形函数
+	
 #endif
 
 }
@@ -77,7 +84,9 @@ void reset_handle(void)
 {
     LogicTask.ResetTask.execute = 1;
 }
-
+void pause_handle(void)
+{
+}
 void  scram_handle(void)
 {
 	for(int i = 0; i < PULS_NUM; i++)

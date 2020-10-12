@@ -82,6 +82,8 @@ typedef enum	//轴动模式选择
 ////#include "MultiAxis.h"
 void AxSetSpdRatio(s8 axnum, float spd);
 void AxisRun(s8 axnum, s8 mode, float spd, float pos);
+void Ex_AxSetSpdRatio(s8 exaxnum, float spd);
+
 void MoveLineNode(PointfDef point, int speed);
 void MoveArcNode(PointfDef point1, PointfDef point2, int speed);
 void MoveCir(PointfDef point1, PointfDef point2, int speed);

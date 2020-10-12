@@ -42,7 +42,6 @@ typedef struct//系统程序自用变量
 extern SysData Data;
 
 void Logic(void);
-
 #endif
 
 

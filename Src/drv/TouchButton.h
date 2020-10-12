@@ -16,6 +16,7 @@ typedef struct
 {
 	u32 *ButtonPress;
 	/*机台当前的运行状态*/
+	u32 *ButtonPress1;
 	const int *FSM_currsta;
 }TouchButtonTaskDef;
 

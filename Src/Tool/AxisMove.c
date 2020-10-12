@@ -30,7 +30,22 @@ void AxSetSpdRatio(s8 axnum, float spd)
                  GSS.axis[axnum].Axhomecfg.homespeedfast,GSS.axis[axnum].Axhomecfg.homespeedslow ,
                  GSS.axis[axnum].Axhomecfg.homespeedoffset, 0, 0);
 }
-
+/*
+* 扩展轴速度设置
+*/
+void Ex_AxSetSpdRatio(s8 exaxnum, float spd)
+{
+	if(spd >= 100 || spd <0)
+	{
+		spd = 100;
+	}
+	HZ_ExAxSetPara(exaxnum,GSS.axis[exaxnum+16].AxSpd.startspeed,GSS.axis[exaxnum+16].AxSpd.acctime,
+				 GSS.axis[exaxnum+16].AxSpd.startspeed + fabs(GSS.axis[exaxnum+16].AxSpd.runspeed - GSS.axis[exaxnum+16].AxSpd.startspeed)*spd / 100,
+                 GSS.axis[exaxnum+16].AxSpd.dectime,GSS.axis[exaxnum+16].AxSpd.endspeed,
+                 GSS.axis[exaxnum+16].Axhomecfg.homespeedfast,GSS.axis[exaxnum+16].Axhomecfg.homespeedslow ,
+                 GSS.axis[exaxnum+16].Axhomecfg.homespeedoffset, 0, 0);
+	
+}
 
 /**************************************************************************
 * @author: 

@@ -7,42 +7,50 @@
 #include "TouchButton.h"
 /*记录上次按下的状态*/
  volatile static int buttonflag;
+ volatile static int buttonflag1;
 /**************************************************************************
 * @author:
+
 * @Date:
 * @Description: 控制两个按钮互斥操作输出IO口
 * @param: 外部传入运行参数
 * @return : 无
 ***************************************************************************/
-void TouchButtonFunc(TouchButtonTaskDef *TounchButtonTask)
+void TouchButtonFunc(TouchButtonTaskDef *TounchButtonTask)//	互斥输出口按键控制函数
 {
-	int buttonpress = 0;
 	if((buttonflag)!=(*(TounchButtonTask->ButtonPress)))
 	{
 		buttonflag = (*(TounchButtonTask->ButtonPress));
-		buttonpress = 1;
-	}
-    /*有按键按下才执行操作*/
-    if(buttonpress)
-    {
-		buttonpress = 0;
-   
-		/*单数IO口开*/
-		if(0 == *TounchButtonTask->ButtonPress)
+		if(buttonflag==1)
+		 {
+			 for(int i = 0; i<GPO_NUM; i+=2)
+			{
+				OutPut_SetSta(i,0);
+			}
+			for(int i = 1; i<GPO_NUM; i+=2)
+			{
+				OutPut_SetSta(i,1);
+			}
+			(*(TounchButtonTask->ButtonPress1))=buttonflag1=0;
+		}
+		 else
+		 {
+			 for(int i = 0; i<GPO_NUM; i+=2)
+			{
+				OutPut_SetSta(i,1);
+			}
+			for(int i = 1; i<GPO_NUM; i+=2)
+			{
+				OutPut_SetSta(i,1);
+			}
+		}
+			 
+	} 
+	 if((buttonflag1)!=(*(TounchButtonTask->ButtonPress1)))
+	{
+		buttonflag1 = (*(TounchButtonTask->ButtonPress1));
+		if(buttonflag1==1)
 		{
-			
-			for(int i = 0; i<GPO_NUM; i+=2)
-			{
-				OutPut_SetSta(i,0);
-			}
-			for(int i = 1; i<GPO_NUM; i+=2)
-			{
-				OutPut_SetSta(i,1);
-			}
-		}
-		/*双数IO口开*/
-		if(1 == *TounchButtonTask->ButtonPress)
-		{  
 			for(int i = 1; i<GPO_NUM; i+=2)
 			{
 				OutPut_SetSta(i,0);
@@ -50,8 +58,22 @@ void TouchButtonFunc(TouchButtonTaskDef *TounchButtonTask)
 			for(int i = 0; i<GPO_NUM; i+=2)
 			{
 				OutPut_SetSta(i,1);
+				(*(TounchButtonTask->ButtonPress))=buttonflag=0;
 			}
 		}
+    else
+		{
+			for(int i = 1; i<GPO_NUM; i+=2)
+			{
+				OutPut_SetSta(i,1);
+			}
+			for(int i = 0; i<GPO_NUM; i+=2)
+			{
+				OutPut_SetSta(i,1);
+			}
+		}
+	} 
+
 		/*页面退出*/
 		if(2 == *TounchButtonTask->ButtonPress)
 		{
@@ -60,6 +82,4 @@ void TouchButtonFunc(TouchButtonTaskDef *TounchButtonTask)
 				OutPut_SetSta(i,1);
 			}
 		}
-    }
 }
-
