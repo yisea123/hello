@@ -1,8 +1,8 @@
- /*
+4 /*
  * File: Logic.c
  * File Created: Tuesday, 9th October 2018 2:43:29 pm
- * version: v00.00.01 8Öáµ×²ã
- * Description:ÓÃ»§Âß¼­
+ * version: v00.00.01 8ï¿½ï¿½×²ï¿½
+ * Description:ï¿½Ã»ï¿½ï¿½ß¼ï¿½
  * Modified By:yang
  * -----
  * Copyright 2018 - 2018, <<hzzh>>
@@ -16,9 +16,9 @@
 #define WeldFrontDetectStation  0
 #define WeldStation 	2
 
-/*È«¾Ö±äÁ¿×öÍ³Ò»´¦Àí*/
-Task LogicTask = { 0 }; //Í³Ò»µÄÈÎÎñÀà
-SysData Data = { 0 };  //Í³Ò»µÄÊý¾ÝÀà
+/*È«ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½Í³Ò»ï¿½ï¿½ï¿½ï¿½*/
+Task LogicTask = { 0 }; //Í³Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+SysData Data = { 0 };  //Í³Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 Gpio Q_Weld[2] = {Q_Weld_F, Q_Weld_B};
 Gpio I_BeltSupply[2] = {I_BeltSupplyL,I_BeltSupplyR};
@@ -26,13 +26,13 @@ Gpio Q_BeltSupply[2] = {Q_BeltSupplyL,Q_BeltSupplyR};
 //u32	AxBelt[2] = {AxBelt_1,AxBelt_2};
 
 
-//ÁÏÅÌÓÐÁÏÊý¾ÝÒÆÎ»
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»
 void FlowData()
 {
 	memmove(&GUS.Product.Data.FlowHave[1],&GUS.Product.Data.FlowHave[0],sizeof(GUS.Product.Data.FlowHave[0])*9);
 	GUS.Product.Data.FlowHave[0] = GUS.Product.Data.FlowHave[9];
 }
-//º¸Ç°¼ì²â¹¤Î»
+//ï¿½ï¿½Ç°ï¿½ï¿½â¹¤Î»
 void WeldFrontDetect(LogicParaDef *p)
 {
 	GCFG.WeldInpEn = GCFG.EntranceInpEn;
@@ -40,7 +40,7 @@ void WeldFrontDetect(LogicParaDef *p)
 	TASK_PROCESS
 	{
 		case 1:
-			if(GCFG.WeldInpEn == 1)//º¸Ç°À´ÁÏ¼ì²âÆôÓÃ
+			if(GCFG.WeldInpEn == 1)//ï¿½ï¿½Ç°ï¿½ï¿½ï¿½Ï¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			{
 				TimerRst(&Tm);
 				my.step = 2;
@@ -62,13 +62,13 @@ void WeldFrontDetect(LogicParaDef *p)
 				if(my.count >= GCFG.WeldFrontLackNum && GCFG.WeldFrontLackNum > 0)
 				{
 					my.count = 0;
-					AlarmSetBit(2,0,10);//º¸Ç°È±ÁÏ±¨¾¯
+					AlarmSetBit(2,0,10);//ï¿½ï¿½Ç°È±ï¿½Ï±ï¿½ï¿½ï¿½
 				}
 				my.step = 3;
 			}
 			else
 			{
-				if(I_Get(I_WeldInp) == ON)//¼ì²âÒ»ÏÂº¸Ç°À´ÁÏ¼ì²â
+				if(I_Get(I_WeldInp) == ON)//ï¿½ï¿½ï¿½Ò»ï¿½Âºï¿½Ç°ï¿½ï¿½ï¿½Ï¼ï¿½ï¿½
 				{
 					my.count = 0;
 					GUS.Product.Data.FlowHave[WeldFrontDetectStation] = 1;
@@ -84,15 +84,15 @@ void WeldFrontDetect(LogicParaDef *p)
 	}
 }
 
-//·­×ª
+//ï¿½ï¿½×ª
 void Turn(LogicParaDef *p)
 {
 	static u32 Tm;
 	static TrigDef Tur;
 	
-	if(GCFG.TurnEn == 1 && TrigOne(&Tur,I_Get(I_TurnInp) == ON && FSM_STA == RUN, GDLY.TurnInp))//·­×ªÀ´ÁÏ¸ÐÓ¦ÑÓÊ±
+	if(GCFG.TurnEn == 1 && TrigOne(&Tur,I_Get(I_TurnInp) == ON && FSM_STA == RUN, GDLY.TurnInp))//ï¿½ï¿½×ªï¿½ï¿½ï¿½Ï¸ï¿½Ó¦ï¿½ï¿½Ê±
 	{
-		my.execute = 1;//Ö´ÐÐÒ»´Î·­×ª
+		my.execute = 1;//Ö´ï¿½ï¿½Ò»ï¿½Î·ï¿½×ª
 	}
 	TASK_PROCESS
 	{
@@ -101,7 +101,7 @@ void Turn(LogicParaDef *p)
 			my.step = 2;
 			break;
 		
-		case 2://ÑÓÊ±£¬·­×ª¹¤×÷¶¨³¤
+		case 2://ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½×ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //			if(TimerCnt(&Tm,1) >= 50)
 			{
 				AxRelUnit(AxReturn,100,GPOS.TurnWorkPos);
@@ -120,28 +120,28 @@ void Turn(LogicParaDef *p)
 	}
 }
 
-//Éè±¸Ö÷Á÷³Ì
+//ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 UphDef DeveceUph;
 void DeviceMain(LogicParaDef *p)
 {
 	static u32 Tm_I_EntranceInp,I_EntranceInp_Ok;
 	
-	//Íâ²¿¿ÚÕÖÌá¹©Éè±¸µÄÆô¶¯ÐÅºÅ¿ØÖÆ
-	if(FSM_STA == RUN)//»úÌ¨ÔËÐÐ×´Ì¬
+	//ï¿½â²¿ï¿½ï¿½ï¿½ï¿½ï¿½á¹©ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÅºÅ¿ï¿½ï¿½ï¿½
+	if(FSM_STA == RUN)//ï¿½ï¿½Ì¨ï¿½ï¿½ï¿½ï¿½×´Ì¬
 	{
 		if(GCFG.OnlineEn == 1 && GCFG.EntranceInpEn == 1)
 		{
-			Q_Set(Q_MaskSupply,ON);//¿ØÖÆÍâ²¿¿ÚÕÖ»ú¹©ÁÏ
+			Q_Set(Q_MaskSupply,ON);//ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½
 		}
 		else
 		{
-			Q_Set(Q_MaskSupply,OFF);//¿ØÖÆÍâ²¿¿ÚÕÖ»ú¹©ÁÏ
+			Q_Set(Q_MaskSupply,OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½â²¿ï¿½ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½
 		}
-		Q_Set(Q_ExitMotor,ON);//³öÁÏµç»ú
+		Q_Set(Q_ExitMotor,ON);//ï¿½ï¿½ï¿½Ïµï¿½ï¿½
 		
 		my.execute = 1;
 	}
-	//Ò»Ö±¼ì²âÈë¿Ú×´Ì¬£¬²¢Íê³ÉÂË²¨£¬²»ÒªµÈ´ýÁ÷³Ì¿ªÊ¼ÅÜµÄÊ±ºòÔÙ¼ì²â£¬¼õÉÙÊ±¼ä
+	//Ò»Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½È´ï¿½ï¿½ï¿½ï¿½Ì¿ï¿½Ê¼ï¿½Üµï¿½Ê±ï¿½ï¿½ï¿½Ù¼ï¿½â£¬ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 	if(TimerCnt(&Tm_I_EntranceInp,I_Get(I_EntranceInp) == ON) > GDLY.EntranceInpDelay)
 	{
 		I_EntranceInp_Ok = 1;
@@ -153,7 +153,7 @@ void DeviceMain(LogicParaDef *p)
 	if(FSM_STA != RUN)return;
 	TASK_PROCESS
 	{
-		case 1://µÈ´ýÈë¿ÚÓÐ¿ÚÕÖ£¬Î»ÒÆÖáÒÆ¶¯Ò»¸ñ
+		case 1://ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½Ð¿ï¿½ï¿½Ö£ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½Ò»ï¿½ï¿½
 			if((I_EntranceInp_Ok == 1 || GCFG.EntranceInpEn == 0))
 			{
 				Data.PutBeltFlag = 1;
@@ -163,23 +163,23 @@ void DeviceMain(LogicParaDef *p)
 			}
 			break;
 			
-		case 2://Î»ÒÆµ½Î»ºó£¬Ö´ÐÐÏÂÁÏºÍº¸½Ó¶¯×÷
+		case 2://Î»ï¿½Æµï¿½Î»ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ÏºÍºï¿½ï¿½Ó¶ï¿½ï¿½ï¿½
 			if(AxSta(AxFlow) == AXSTA_READY)
 			{
 				HZ_AxSetCurPos(AxFlow,GPOS.FlowReady);
 				Data.PutBeltFlag = 0;
-				FlowData();//ÁÏÅÌÊý¾ÝÒÆ¶¯
-				LT.WeldFrontDetectTask.execute = 1;//º¸Ç°¼ì²â
+				FlowData();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½
+				LT.WeldFrontDetectTask.execute = 1;//ï¿½ï¿½Ç°ï¿½ï¿½ï¿½
 				LT.WeldTask.execute = 1;
 				my.step = 3;
 			}
-			else if(GSR.AxisUnitPosition[AxFlow] >= Data.AxFlowPos + GPOS.FlowFeed/2)//ÁÏÅÌÕýÏòÒÆ¶¯Ò»¸ñµÄÒ»°ëºó²ÅÔÊÐíË«×¦µ½·Å´øÎ»ÖÃ
+			else if(GSR.AxisUnitPosition[AxFlow] >= Data.AxFlowPos + GPOS.FlowFeed/2)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½Ò»ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë«×¦ï¿½ï¿½ï¿½Å´ï¿½Î»ï¿½ï¿½
 			{
 				Data.PutBeltFlag = 0;
 			}
 			break;
 			
-		case 3://º¸½ÓÍê³Éºó£¬¼ÆËã²úÄÜ£¬½áÊø
+		case 3://ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Éºó£¬¼ï¿½ï¿½ï¿½ï¿½ï¿½Ü£ï¿½ï¿½ï¿½ï¿½ï¿½
 			if(LT.WeldTask.execute == 0 && LT.WeldFrontDetectTask.execute == 0)
 			{
 				UphCal(&DeveceUph);
@@ -191,19 +191,19 @@ void DeviceMain(LogicParaDef *p)
 	}
 }
 
-//È¡Ïß£¬È¡À­ºÃµÄÏß£¬µ½º¸Î»ÉÏ·½µÈ´ý
+//È¡ï¿½ß£ï¿½È¡ï¿½ï¿½ï¿½Ãµï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½Ï·ï¿½ï¿½È´ï¿½
 void Pick(LogicParaDef *p)
 {
 	static u32 Tm,Tm2;
 	TASK_PROCESS
 	{
 		case 1:
-			Q_Set(Q_PickClamp,OFFR);//ÕÅ¿ª¼Ð×Ó
-			TimerRst(&Tm);//ÑÓÊ±
+			Q_Set(Q_PickClamp,OFFR);//ï¿½Å¿ï¿½ï¿½ï¿½ï¿½ï¿½
+			TimerRst(&Tm);//ï¿½ï¿½Ê±
 			my.step = 2;
 			break;
 			
-		case 2://Éý½µÖáµ½Ô¤±¸Î»
+		case 2://ï¿½ï¿½ï¿½ï¿½ï¿½áµ½Ô¤ï¿½ï¿½Î»
 			if(AxSta(AxPickZ) == AXSTA_READY && TimerCnt(&Tm,1) >= GDLY.PickClampOffDelay)
 			{
 				AxAbsUnit(AxPickZ,GSPD,GPOS.PickZReady);
@@ -219,11 +219,11 @@ void Pick(LogicParaDef *p)
 			}
 			break;
 			
-		case 0xa2://ÅÐ¶ÏÉÏÉýµ½Î»£¨Éý½µÖáÔ­µã×÷ÉÏÉýµ½Î»ÐÅºÅ£©
+		case 0xa2://ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ÅºÅ£ï¿½
 			if(TimerCnt(&Tm,1) > 1000)
 			{
-				AlarmSetBit(2,0,9);//Éý½µÖáÎ´ÉÏÉýµ½Î»
-				FSM_CMD = SCRAM;//¼±Í£
+				AlarmSetBit(2,0,9);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»
+				FSM_CMD = SCRAM;//ï¿½ï¿½Í£
 			}
 			else
 			{
@@ -234,7 +234,7 @@ void Pick(LogicParaDef *p)
 			}
 			break;
 		
-		case 3://Éý½µÖáµ½Î»£¬Ç°ºó×óÓÒµ½È¡ÏßÎ»
+		case 3://ï¿½ï¿½ï¿½ï¿½ï¿½áµ½Î»ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½È¡ï¿½ï¿½Î»
 			if(AxSta(AxPickZ) == AXSTA_READY &&
 			   AxSta(AxPickLB) == AXSTA_READY &&
 			   AxSta(AxPickLF) == AXSTA_READY &&
@@ -249,13 +249,13 @@ void Pick(LogicParaDef *p)
 			}
 			break;
 			
-		case 4://Ç°ºó×óÓÒµ½Î»
+		case 4://Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½Î»
 			if(AxSta(AxPickLB) == AXSTA_READY &&
 			   AxSta(AxPickLF) == AXSTA_READY &&
 			   AxSta(AxPickRB) == AXSTA_READY &&
 			   AxSta(AxPickRF) == AXSTA_READY)
 			{
-				//Èç¹ûÀ­ÏßÃ»Íê³É£¬À­Ò»´ÎÏß
+				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½É£ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½
 				if(LT.PullTask.done != 1)
 				{
 					LT.PullTask.execute = 1;
@@ -265,21 +265,21 @@ void Pick(LogicParaDef *p)
 			break;
 			
 		case 5:
-			if(LT.PullTask.execute == 0)//À­Ïß½áÊø
+			if(LT.PullTask.execute == 0)//ï¿½ï¿½ï¿½ß½ï¿½ï¿½ï¿½
 			{
-				if(LT.PullTask.done == 1)//ÅÐ¶ÏÀ­Ïß½á¹û£¬OK¼ÌÐø
+				if(LT.PullTask.done == 1)//ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ß½ï¿½ï¿½ï¿½ï¿½OKï¿½ï¿½ï¿½ï¿½
 				{
 					LT.PullTask.done = 0;
 					my.step = 6;
 				}
-				else//NGÖØÐÂÀ­Ïß
+				else//NGï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				{
 					my.step = 4;
 				}
 			}
 			break;
 			
-		case 6://Éý½µÖáµ½È¡ÏßÎ»
+		case 6://ï¿½ï¿½ï¿½ï¿½ï¿½áµ½È¡ï¿½ï¿½Î»
 			if(AxSta(AxPickZ) == AXSTA_READY)
 			{
 				AxAbsUnit(AxPickZ,GSPD,GPOS.PickZTake);
@@ -287,7 +287,7 @@ void Pick(LogicParaDef *p)
 			}
 			break;
 			
-		case 7://Éý½µÖáµ½Î»
+		case 7://ï¿½ï¿½ï¿½ï¿½ï¿½áµ½Î»
 			if(AxSta(AxPickZ) == AXSTA_READY &&
 			   AxSta(AxPickLB) == AXSTA_READY &&
 			   AxSta(AxPickLF) == AXSTA_READY &&
@@ -295,40 +295,40 @@ void Pick(LogicParaDef *p)
 			   AxSta(AxPickRF) == AXSTA_READY)
 			{
 				TimerRst(&Tm);
-				Q_Set(Q_PickClamp,ONR);//È¡Ïß¼Ð¼Ð½ô
+				Q_Set(Q_PickClamp,ONR);//È¡ï¿½ß¼Ð¼Ð½ï¿½
 				my.step = 8;
 			}
 			break;
 			
-		case 8://ÑÓÊ±ºó
+		case 8://ï¿½ï¿½Ê±ï¿½ï¿½
 			if(TimerCnt(&Tm,1) >= GDLY.PickClampOnDelay)
 			{
-				Q_Set(Q_PullClamp,OFFR);//À­Ïß¼Ð×ÓÕÅ¿ª
-				Q_Set(Q_Cut,ON);//¼ôµ¶¼ôÏß
+				Q_Set(Q_PullClamp,OFFR);//ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½ï¿½Å¿ï¿½
+				Q_Set(Q_Cut,ON);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				TimerRst(&Tm);
 				TimerRst(&Tm2);
 				my.step = 9;
 			}
 			break;
 			
-		case 9://ÑÓÊ±ºó
+		case 9://ï¿½ï¿½Ê±ï¿½ï¿½
 			if(TimerCnt(&Tm,1) >= GDLY.CutOnDelay)
 			{
-				Q_Set(Q_Cut,OFF);//¼ôµ¶ÕÅ¿ª
+				Q_Set(Q_Cut,OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½Å¿ï¿½
 				TimerRst(&Tm);
 				my.step = 10;
 			}
 			break;
 			
-		case 10://ÑÓÊ±ºó
+		case 10://ï¿½ï¿½Ê±ï¿½ï¿½
 			if(TimerCnt(&Tm2,1) >= GDLY.PullClampOffDelay && TimerCnt(&Tm,1) >= GDLY.CutOffDelay)
 			{
-				AxAbsUnit(AxPickZ,GSPD,GPOS.PickZReady);//Éý½µÖáµ½ÉÏÎ»ÖÃ
+				AxAbsUnit(AxPickZ,GSPD,GPOS.PickZReady);//ï¿½ï¿½ï¿½ï¿½ï¿½áµ½ï¿½ï¿½Î»ï¿½ï¿½
 				my.step = 11;
 			}
 			break;
 			
-		case 11://Éý½µµ½ÉÏÎ»ÖÃºó
+		case 11://ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½Ãºï¿½
 			if(AxSta(AxPickZ) == AXSTA_READY)
 			{
 				TimerRst(&Tm);
@@ -336,17 +336,17 @@ void Pick(LogicParaDef *p)
 			}
 			break;
 			
-		case 0xa3://ÅÐ¶ÏÉÏÉýµ½Î»£¨Éý½µÖáÔ­µã×÷ÉÏÉýµ½Î»ÐÅºÅ£©
+		case 0xa3://ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ÅºÅ£ï¿½
 			if(TimerCnt(&Tm,1) > 1000)
 			{
-				AlarmSetBit(2,0,9);//Éý½µÖáÎ´ÉÏÉýµ½Î»
-				FSM_CMD = SCRAM;//¼±Í£
+				AlarmSetBit(2,0,9);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»
+				FSM_CMD = SCRAM;//ï¿½ï¿½Í£
 			}
 			else
 			{
 				if(I_Get(I_Origin2) == ON)
 				{
-					LT.PullTask.execute = 1;//À­Ïß
+					LT.PullTask.execute = 1;//ï¿½ï¿½ï¿½ï¿½
 					my.step = 12;
 				}
 			}
@@ -357,19 +357,19 @@ void Pick(LogicParaDef *p)
 			   AxSta(AxPickLF) == AXSTA_READY &&
 			   AxSta(AxPickRB) == AXSTA_READY &&
 			   AxSta(AxPickRF) == AXSTA_READY)
-			   Q_Set(Q_PickClamp,OFFR);//ÕÅ¿ª¼Ð×Ó
-		     TimerRst(&Tm);          //ÑÓÊ±
+			   Q_Set(Q_PickClamp,OFFR);//ï¿½Å¿ï¿½ï¿½ï¿½ï¿½ï¿½
+		     TimerRst(&Tm);          //ï¿½ï¿½Ê±
 			   my.step = 13;
 			   break;
-//		case 12://Öá¶¼ÔÚÔ¤±¸×´Ì¬£¬ÇÒµãº¸Æø¸×ÔÚÉÏÎ»ÖÃ
+//		case 12://ï¿½á¶¼ï¿½ï¿½Ô¤ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½Òµãº¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
 //			if(AxSta(AxPickZ) == AXSTA_READY &&
 //			   AxSta(AxPickLB) == AXSTA_READY &&
 //			   AxSta(AxPickLF) == AXSTA_READY &&
 //			   AxSta(AxPickRB) == AXSTA_READY &&
-//			   AxSta(AxPickRF) == AXSTA_READY && Data.PutBeltFlag == 0) //ÁÏÅÌÕýÏòÒÆ¶¯Ò»¸ñµÄÒ»°ëºó²ÅÔÊÐíË«×¦µ½·Å´øÎ»ÖÃ
+//			   AxSta(AxPickRF) == AXSTA_READY && Data.PutBeltFlag == 0) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½Ò»ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë«×¦ï¿½ï¿½ï¿½Å´ï¿½Î»ï¿½ï¿½
 //				//&& AxSta(AxWeld) == AXSTA_READY)
 //			{
-//				//Ç°ºó×óÓÒµ½·ÅÏßÎ»
+//				//Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ï¿½ï¿½ï¿½Î»
 //				AxAbsUnit(AxPickLB,GSPD,GPOS.PickPutLB);
 //				AxAbsUnit(AxPickLF,GSPD,GPOS.PickPutLF);
 //				AxAbsUnit(AxPickRB,GSPD,GPOS.PickPutRB);
@@ -378,7 +378,7 @@ void Pick(LogicParaDef *p)
 //			}
 //			break;
 			
-		case 13://Ç°ºó×óÓÒµ½Î»ºó£¬½áÊø
+		case 13://Ç°ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½Î»ï¿½ó£¬½ï¿½ï¿½ï¿½
 			if(AxSta(AxPickZ) == AXSTA_READY &&
 			   AxSta(AxPickLB) == AXSTA_READY &&
 			   AxSta(AxPickLF) == AXSTA_READY &&
@@ -392,14 +392,14 @@ void Pick(LogicParaDef *p)
 			break;
 	}
 }
-//³¬Éù²¨¿ª¹Ø¡¢¹Ì»¯
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¡ï¿½ï¿½Ì»ï¿½
 void Ultrasonic(LogicParaDef *p, s32 i)
 {
 	static u32 Tm[2];
 	TASK_PROCESS
 	{
 		case 1:
-			Q_Set(Q_Weld[i],ON);//³¬Éù²¨¿ª
+			Q_Set(Q_Weld[i],ON);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			TimerRst(&Tm[i]);
 			my.step = 2;
 			break;
@@ -407,7 +407,7 @@ void Ultrasonic(LogicParaDef *p, s32 i)
 		case 2:
 			if(TimerCnt(&Tm[i],1) >= GDLY.WeldOnDelayFB[i])
 			{
-				Q_Set(Q_Weld[i],OFF);//³¬Éù²¨¹Ø
+				Q_Set(Q_Weld[i],OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				TimerRst(&Tm[i]);
 				my.step = 3;
 			}
@@ -424,79 +424,79 @@ void Ultrasonic(LogicParaDef *p, s32 i)
 	}
 }
 
-//º¸Ïß
+//ï¿½ï¿½ï¿½ï¿½
 void Weld(LogicParaDef *p)
 {
 	static u32 Tm;
 	static u32 Tm_WeldUpF,Tm_WeldDownF,Tm_WeldUpB,Tm_WeldDownB;
-	//µãº¸Æø¸×±¨¾¯
+	//ï¿½ãº¸ï¿½ï¿½ï¿½×±ï¿½ï¿½ï¿½
 	if(TimerCnt(&Tm_WeldDownF,Q_Get(Q_WeldLift) == ON && I_Get(I_WeldCydDownF) != ON) > 800)
 	{
-		Q_Set(Q_Weld[0],OFF);//³¬Éù²¨¹Ø
-		Q_Set(Q_Weld[1],OFF);//³¬Éù²¨¹Ø
+		Q_Set(Q_Weld[0],OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		Q_Set(Q_Weld[1],OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		PARAINIT(LT.WeldTask);
 		GUR.HaveToReset = 1;
-		AlarmSetBit(2,0,4);//Ç°µãº¸Æø¸×ÏÂ¸ÐÓ¦Òì³£
+		AlarmSetBit(2,0,4);//Ç°ï¿½ãº¸ï¿½ï¿½ï¿½ï¿½ï¿½Â¸ï¿½Ó¦ï¿½ì³£
 	}
 	if(TimerCnt(&Tm_WeldUpF,Q_Get(Q_WeldLift) == OFF && I_Get(I_WeldCydUpF) != ON) > 800)
 	{
-		Q_Set(Q_Weld[0],OFF);//³¬Éù²¨¹Ø
-		Q_Set(Q_Weld[1],OFF);//³¬Éù²¨¹Ø
+		Q_Set(Q_Weld[0],OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		Q_Set(Q_Weld[1],OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		PARAINIT(LT.WeldTask);
 		GUR.HaveToReset = 1;
-		AlarmSetBit(2,0,5);//Ç°µãº¸Æø¸×ÉÏ¸ÐÓ¦Òì³£
+		AlarmSetBit(2,0,5);//Ç°ï¿½ãº¸ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½Ó¦ï¿½ì³£
 	}
 	if(TimerCnt(&Tm_WeldDownB,Q_Get(Q_WeldLift) == ON && I_Get(I_WeldCydDownB) != ON) > 800)
 	{
-		Q_Set(Q_Weld[0],OFF);//³¬Éù²¨¹Ø
-		Q_Set(Q_Weld[1],OFF);//³¬Éù²¨¹Ø
+		Q_Set(Q_Weld[0],OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		Q_Set(Q_Weld[1],OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		PARAINIT(LT.WeldTask);
 		GUR.HaveToReset = 1;
-		AlarmSetBit(2,0,7);//ºóµãº¸Æø¸×ÏÂ¸ÐÓ¦Òì³£
+		AlarmSetBit(2,0,7);//ï¿½ï¿½ãº¸ï¿½ï¿½ï¿½ï¿½ï¿½Â¸ï¿½Ó¦ï¿½ì³£
 	}
 	if(TimerCnt(&Tm_WeldUpB,Q_Get(Q_WeldLift) == OFF && I_Get(I_WeldCydUpB) != ON) > 800)
 	{
-		Q_Set(Q_Weld[0],OFF);//³¬Éù²¨¹Ø
-		Q_Set(Q_Weld[1],OFF);//³¬Éù²¨¹Ø
+		Q_Set(Q_Weld[0],OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+		Q_Set(Q_Weld[1],OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		PARAINIT(LT.WeldTask);
 		GUR.HaveToReset = 1;
-		AlarmSetBit(2,0,8);//ºóµãº¸Æø¸×ÉÏ¸ÐÓ¦Òì³£
+		AlarmSetBit(2,0,8);//ï¿½ï¿½ãº¸ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½Ó¦ï¿½ì³£
 	}
 	
 	TASK_PROCESS
 	{
-		case 1://ÑÓÊ±
+		case 1://ï¿½ï¿½Ê±
 			TimerRst(&Tm);
 			my.step = 2;
 			break;
 		
-		case 2://º¸Ç°¼ì²âÓÐÁÏ
+		case 2://ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			if(GUS.Product.Data.FlowHave[WeldStation] == 1 || GCFG.WeldInpEn == 0)
 			{
 				GUS.Product.Data.FlowHave[WeldStation] = 0;
-				my.step = 3;//È¥º¸½Ó
+				my.step = 3;//È¥ï¿½ï¿½ï¿½ï¿½
 			}
 			else
 			{
-				my.step = 10;//È¥½áÊø
+				my.step = 10;//È¥ï¿½ï¿½ï¿½ï¿½
 			}
 			break;
 		
-		case 3://²éÑ¯ÊÇ·ñÈ¡ºÃÏßÁË
+		case 3://ï¿½ï¿½Ñ¯ï¿½Ç·ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			if(LT.PickTask.done != 1)
 			{
-				LT.PickTask.execute = 1;//Ã»ÓÐ¾ÍÈ¥È¡
+				LT.PickTask.execute = 1;//Ã»ï¿½Ð¾ï¿½È¥È¡
 			}
 			my.step = 4;
 			break;
 			
-		case 4://È·±£È¡ÏßÍê³É
+		case 4://È·ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½
 			if(LT.PickTask.execute == 0 ) //&& AxSta(AxWeld) == AXSTA_READY)
 			{
 				if(LT.PickTask.done == 1)
 				{
 					LT.PickTask.done = 0;
-					AxAbsUnit(AxPickZ,GSPD,GPOS.PickZPut);//Éý½µÖáÏÂ½µ
+					AxAbsUnit(AxPickZ,GSPD,GPOS.PickZPut);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â½ï¿½
 					
 					my.step = 5;
 				}
@@ -511,24 +511,24 @@ void Weld(LogicParaDef *p)
 //			if(AxSta(AxPickZ) == AXSTA_READY)
 			{
 				Q_Set(Q_WeldLift,ON);
-				//AxAbsUnit(AxWeld,GSPD,GPOS.WeldWork);//µãº¸Æø¸×ÏÂ½µ
+				//AxAbsUnit(AxWeld,GSPD,GPOS.WeldWork);//ï¿½ãº¸ï¿½ï¿½ï¿½ï¿½ï¿½Â½ï¿½
 				TimerRst(&Tm);
 				TimerRst(&Tm_WeldDownF);
 				TimerRst(&Tm_WeldDownB);
 				if(GCFG.WeldEn == 1)
 				{
-					Q_Set(Q_Weld[0],ON);//³¬Éù²¨ÌáÇ°¿ª
-					Q_Set(Q_Weld[1],ON);//³¬Éù²¨ÌáÇ°¿ª
+					Q_Set(Q_Weld[0],ON);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
+					Q_Set(Q_Weld[1],ON);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½
 				}
 				my.step = 6;
 			}
 			break;
 			
-		case 6://µÈ´ýÉý½µÖáºÍµãº¸Æø¸×ÏÂµ½Î»
+		case 6://ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íµãº¸ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½Î»
 			if(AxSta(AxPickZ) == AXSTA_READY && I_Get(I_WeldCydDownF)== ON && I_Get(I_WeldCydDownB)== ON)//AxSta(AxWeld) == AXSTA_READY)
 			{
 				Data.PutBeltFlag = 1;
-				LT.PickTask.execute = 1;//È¡ÏßÓÖ¿ÉÒÔÈ¥È¡ÏßÁË
+				LT.PickTask.execute = 1;//È¡ï¿½ï¿½ï¿½Ö¿ï¿½ï¿½ï¿½È¥È¡ï¿½ï¿½ï¿½ï¿½
 				if(GCFG.WeldEn == 1)
 				{
 					LT.UltrasonicTask[0].execute = 1;
@@ -540,13 +540,13 @@ void Weld(LogicParaDef *p)
 			{
 				if(GCFG.WeldEn == 1)
 				{
-					Q_Set(Q_Weld[0],OFF);//³¬Éù²¨¹Ø
-					Q_Set(Q_Weld[1],OFF);//³¬Éù²¨¹Ø
+					Q_Set(Q_Weld[0],OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+					Q_Set(Q_Weld[1],OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				}
 			}
 			break;
 						
-		case 7://µÈ´ý¹Ì»°Ê±¼ä
+		case 7://ï¿½È´ï¿½ï¿½Ì»ï¿½Ê±ï¿½ï¿½
 			if(LT.UltrasonicTask[0].execute == 0 && LT.UltrasonicTask[1].execute == 0)
 			{
 				//AxAbsUnit(AxWeld,GSPD,GPOS.WeldReady);
@@ -566,12 +566,12 @@ void Weld(LogicParaDef *p)
 			}
 			break;
 							
-		case 9://µÈ´ýÖá½áÊø£¬»òÕßµ±Ç°Î»ÖÃÀëÔ¤±¸Î»Ð¡ÓÚÐÐ³ÌµÄ1/3Ê±
+		case 9://ï¿½È´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ßµï¿½Ç°Î»ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½Î»Ð¡ï¿½ï¿½ï¿½Ð³Ìµï¿½1/3Ê±
 //			if(I_Get(I_WeldCydUp) == ON && FSM_STA == RUN)
 			//if(AxSta(AxWeld) == AXSTA_READY || fabs(GPOS.WeldReady - GSR.AxisUnitPosition[AxWeld]) <= fabs(GPOS.WeldReady - GPOS.WeldWork)/2)
 			if(((I_Get(I_WeldCydUpF) == ON && I_Get(I_WeldCydUpB)== ON) || (TimerCnt(&Tm,1) > GDLY.WeldLiftOffDelay))  && FSM_STA == RUN)
 			{
-				my.step = 10;//È¥½áÊø
+				my.step = 10;//È¥ï¿½ï¿½ï¿½ï¿½
 			}
 			break;
 			
@@ -582,12 +582,12 @@ void Weld(LogicParaDef *p)
 	}
 }
 
-//À­Ïß
+//ï¿½ï¿½ï¿½ï¿½
 void Pull(LogicParaDef *p)
 {
 	static u32 Tm;
 	static u32 I_BeltSupply_Off[2];
-	//¼ì²âËÍÏß¸ÐÓ¦ÔÚÀ­Ïß¹ý³ÌÖÐÓÐÃ»ÓÐOFFÐÅºÅ£¬ÓÐ¾Í´ú±íÀ­µ½ÏßÁË
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¸ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ß¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½OFFï¿½ÅºÅ£ï¿½ï¿½Ð¾Í´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	for(int i=0; i<2; i++)
 	{
 		if(I_Get(I_BeltSupply[i]) == OFF)
@@ -597,7 +597,7 @@ void Pull(LogicParaDef *p)
 	}
 	TASK_PROCESS
 	{
-		case 1://À­Ïß¼Ð×ÓÕÅ¿ª£¬À­ÏßÖáµ½È¡ÏßÎ»
+		case 1://ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½ï¿½Å¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½áµ½È¡ï¿½ï¿½Î»
 			I_BeltSupply_Off[0] = 0;
 			I_BeltSupply_Off[1] = 0;
 			Q_Set(Q_PullClamp,OFFR);
@@ -605,7 +605,7 @@ void Pull(LogicParaDef *p)
 			my.step = 2;
 			break;
 		
-		case 2://¼Ð×Ó¼Ð½ô
+		case 2://ï¿½ï¿½ï¿½Ó¼Ð½ï¿½
 			if(AxSta(AxPull) == AXSTA_READY)
 			{
 				Q_Set(Q_PullClamp,ONR);
@@ -614,7 +614,7 @@ void Pull(LogicParaDef *p)
 			}
 			break;
 			
-		case 3://Ñ¹ÏßËÉ¿ª
+		case 3://Ñ¹ï¿½ï¿½ï¿½É¿ï¿½
 			if(TimerCnt(&Tm,1) >= GDLY.PullClampOnDelay)
 			{
 				Q_Set(Q_Press,ON);
@@ -623,7 +623,7 @@ void Pull(LogicParaDef *p)
 			}
 			break;
 			
-		case 4://À­ÏßÖáµ½À­ÏßºóÎ»
+		case 4://ï¿½ï¿½ï¿½ï¿½ï¿½áµ½ï¿½ï¿½ï¿½ßºï¿½Î»
 			if(TimerCnt(&Tm,1) >= GDLY.PressOnDelay)
 			{
 				TimerRst(&Tm);
@@ -632,7 +632,7 @@ void Pull(LogicParaDef *p)
 			}
 			break;
 			
-		case 5://À­ÁËÒ»¶ÎÊ±¼äÖ®ºó£¬»òÕßÀ­ÏßÖá½áÊøÁË£¬¾ÍÑ¹Ïß
+		case 5://ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ê±ï¿½ï¿½Ö®ï¿½ó£¬»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½
 //			if(TimerCnt(&Tm,1) >= GDLY.LenthTime || AxSta(AxPull) == AXSTA_READY)
 			if(AxSta(AxPull) == AXSTA_READY)
 			{
@@ -641,7 +641,7 @@ void Pull(LogicParaDef *p)
 			}
 			break;
 		
-		case 6://À­Ïßµç»ú×ßµ½À­ÏßºóÎ»ÖÃºóÑÓÊ±Ñ¹´ø
+		case 6://ï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½ï¿½ßºï¿½Î»ï¿½Ãºï¿½ï¿½ï¿½Ê±Ñ¹ï¿½ï¿½
 			if(TimerCnt(&Tm,1) >= GDLY.DelayPress)
 			{
 				Q_Set(Q_Press,OFF);
@@ -650,7 +650,7 @@ void Pull(LogicParaDef *p)
 			}
 			break;
 			
-		case 7://Ñ¹ÏßÆø¸×¶¯×÷Ê±¼ä ÇÒ À­ÏßÖá½áÊø£¬Á÷³Ì½áÊø
+		case 7://Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½×¶ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½
 			if(TimerCnt(&Tm,1) >= GDLY.PressOffDelay && AxSta(AxPull) == AXSTA_READY)
 			{
 				LT.BeltSupplyTask[0].execute = 1;
@@ -662,7 +662,7 @@ void Pull(LogicParaDef *p)
 					my.count ++;
 					if(my.count >= 3)
 					{
-						AlarmSetBit(2,0,6);//À­¶úÏß¶¯×÷Ê§°Ü
+						AlarmSetBit(2,0,6);//ï¿½ï¿½ï¿½ï¿½ï¿½ß¶ï¿½ï¿½ï¿½Ê§ï¿½ï¿½
 						my.count = 0;
 					}
 				}
@@ -676,7 +676,7 @@ void Pull(LogicParaDef *p)
 	}
 }
 
-//ÊÖ¶¯ÁÏÅÌÍùÇ°ÒÆ¶¯Ò»¸ö
+//ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½Æ¶ï¿½Ò»ï¿½ï¿½
 void ManualFlowFeed(LogicParaDef *p)
 {
 	TASK_PROCESS
@@ -690,8 +690,8 @@ void ManualFlowFeed(LogicParaDef *p)
 			if(AxSta(AxFlow) == AXSTA_READY)
 			{
 				HZ_AxSetCurPos(AxFlow,GPOS.FlowReady);
-				FlowData();//ÁÏÅÌÊý¾ÝÒÆ¶¯
-				LT.WeldFrontDetectTask.execute = 1;//º¸Ç°¼ì²â
+				FlowData();//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¶ï¿½
+				LT.WeldFrontDetectTask.execute = 1;//ï¿½ï¿½Ç°ï¿½ï¿½ï¿½
 				my.execute = 0;
 				my.step = 0;
 			}
@@ -699,29 +699,29 @@ void ManualFlowFeed(LogicParaDef *p)
 	}
 }
 
-//ÊÖ¶¯¼ôÏß
+//ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½
 void ManualCutBelt(LogicParaDef *p)
 {
 	static u32 Tm;
 	TASK_PROCESS
 	{
 		case 1:
-			Q_Set(Q_Cut,ON);//¼ôµ¶¼ôÏß
+			Q_Set(Q_Cut,ON);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			TimerRst(&Tm);
 			my.step = 2;
 			break;
 			
-		case 2://¼ôÏßÊ±¼ä
+		case 2://ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 			if(TimerCnt(&Tm,1) >= GDLY.CutOnDelay)
 			{
-				Q_Set(Q_PullClamp,OFFR);//À­Ïß¼Ð×ÓÕÅ¿ª
-				Q_Set(Q_Cut,OFF);//¼ôµ¶ÕÅ¿ª
+				Q_Set(Q_PullClamp,OFFR);//ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½ï¿½Å¿ï¿½
+				Q_Set(Q_Cut,OFF);//ï¿½ï¿½ï¿½ï¿½ï¿½Å¿ï¿½
 				TimerRst(&Tm);
 				my.step = 3;
 			}
 			break;
 			
-		case 3://¼ôµ¶¿ªÑÓÊ±
+		case 3://ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±
 			if(TimerCnt(&Tm,1) >= GDLY.CutOffDelay)
 			{
 				my.execute = 0;
@@ -731,13 +731,13 @@ void ManualCutBelt(LogicParaDef *p)
 	}
 }
 
-//ÊÖ¶¯À­Ïß
+//ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½
 void ManualPull(LogicParaDef *p)
 {	
 	static u32 Tm;
 	TASK_PROCESS
 	{
-		case 1://Éý½µÖáµ½Ô¤±¸Î»
+		case 1://ï¿½ï¿½ï¿½ï¿½ï¿½áµ½Ô¤ï¿½ï¿½Î»
 			if(AxInpSta(AxPickZ) == AXSTA_READY && AxSta(AxPull) == AXSTA_READY && 
 			   AxSta(AxPickLB) == AXSTA_READY && AxSta(AxPickLF) == AXSTA_READY &&
 			   AxSta(AxPickRB) == AXSTA_READY && AxSta(AxPickRF) == AXSTA_READY)
@@ -760,11 +760,11 @@ void ManualPull(LogicParaDef *p)
 			}
 			break;
 			
-		case 3://ÅÐ¶ÏÉÏÉýµ½Î»£¨Éý½µÖáÔ­µã×÷ÉÏÉýµ½Î»ÐÅºÅ£©
+		case 3://ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ÅºÅ£ï¿½
 			if(TimerCnt(&Tm,1) > 1000)
 			{
-				AlarmSetBit(2,0,9);//Éý½µÖáÎ´ÉÏÉýµ½Î»
-				FSM_CMD = SCRAM;//¼±Í£
+				AlarmSetBit(2,0,9);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»
+				FSM_CMD = SCRAM;//ï¿½ï¿½Í£
 			}
 			else
 			{
@@ -775,14 +775,14 @@ void ManualPull(LogicParaDef *p)
 			}
 			break;
 			
-		case 4://À­Ïß¼Ð×ÓÕÅ¿ª£¬À­ÏßÖáµ½È¡ÏßÎ»
+		case 4://ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½ï¿½Å¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½áµ½È¡ï¿½ï¿½Î»
 			Q_Set(Q_PullClamp,OFFR);
 			Q_Set(Q_Cut,OFF);
 			AxAbsUnit(AxPull,GSPD,GPOS.PullTake);
 			my.step = 5;
 			break;
 		
-		case 5://¼Ð×Ó¼Ð½ô
+		case 5://ï¿½ï¿½ï¿½Ó¼Ð½ï¿½
 			if(AxSta(AxPull) == AXSTA_READY)
 			{
 				Q_Set(Q_PullClamp,ONR);
@@ -791,7 +791,7 @@ void ManualPull(LogicParaDef *p)
 			}
 			break;
 			
-		case 6://Ñ¹ÏßËÉ¿ª
+		case 6://Ñ¹ï¿½ï¿½ï¿½É¿ï¿½
 			if(TimerCnt(&Tm,1) >= GDLY.PullClampOnDelay)
 			{
 				Q_Set(Q_Press,ON);
@@ -800,7 +800,7 @@ void ManualPull(LogicParaDef *p)
 			}
 			break;
 			
-		case 7://À­ÏßÖáµ½À­ÏßºóÎ»
+		case 7://ï¿½ï¿½ï¿½ï¿½ï¿½áµ½ï¿½ï¿½ï¿½ßºï¿½Î»
 			if(TimerCnt(&Tm,1) >= GDLY.PressOnDelay)
 			{
 				TimerRst(&Tm);
@@ -809,7 +809,7 @@ void ManualPull(LogicParaDef *p)
 			}
 			break;
 			
-		case 8://À­ÁËÒ»¶ÎÊ±¼äÖ®ºó£¬»òÕßÀ­ÏßÖá½áÊøÁË£¬¾ÍÑ¹Ïß
+		case 8://ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½Ê±ï¿½ï¿½Ö®ï¿½ó£¬»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë£ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½
 			if(AxSta(AxPull) == AXSTA_READY)
 			{
 				TimerRst(&Tm);
@@ -817,7 +817,7 @@ void ManualPull(LogicParaDef *p)
 			}
 			break;
 			
-		case 9://À­Ïßµç»ú×ßµ½À­ÏßºóÎ»ÖÃºóÑÓÊ±Ñ¹´ø
+		case 9://ï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½ï¿½ßºï¿½Î»ï¿½Ãºï¿½ï¿½ï¿½Ê±Ñ¹ï¿½ï¿½
 			if(TimerCnt(&Tm,1) >= GDLY.DelayPress)
 			{
 				Q_Set(Q_Press,OFF);
@@ -826,7 +826,7 @@ void ManualPull(LogicParaDef *p)
 			}
 			break;
 			
-		case 10://Ñ¹ÏßÆø¸×¶¯×÷Ê±¼ä ÇÒ À­ÏßÖá½áÊø£¬Á÷³Ì½áÊø
+		case 10://Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½×¶ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì½ï¿½ï¿½ï¿½
 			if(TimerCnt(&Tm,1) >= GDLY.PressOffDelay && AxSta(AxPull) == AXSTA_READY)
 			{
 				LT.BeltSupplyTask[0].execute = 1;
@@ -840,31 +840,31 @@ void ManualPull(LogicParaDef *p)
 }
 
 
-//¹©Ïß
+//ï¿½ï¿½ï¿½ï¿½
 void BeltSupply(LogicParaDef *p, s32 i)
 {
 	GDLY.SupplyDelay = 2000;
 	GUS.Config.Data.SupplyAlmNum = 2;
 	static u32 Tm[2];
-	//µ±¸¡¹÷ÏÂÐÅºÅÃ»ÓÐ¸ÐÓ¦Ê±
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Åºï¿½Ã»ï¿½Ð¸ï¿½Ó¦Ê±
 	if(I_Get(I_BeltSupply[i]) == OFF)
 	{
 		my.execute = 1;
 	}
 	TASK_PROCESS
 	{		
-		case 1://Ã¿´ÎÀ­Ïßºó»áÖ´ÐÐÒ»´Î¹©Ïß£¬Èç¹ûÀ­Ïßºó¹©ÏßÐÅºÅÃ»ÓÐ¸ÐÓ¦
+		case 1://Ã¿ï¿½ï¿½ï¿½ï¿½ï¿½ßºï¿½ï¿½Ö´ï¿½ï¿½Ò»ï¿½Î¹ï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ßºï¿½ï¿½ï¿½ï¿½Åºï¿½Ã»ï¿½Ð¸ï¿½Ó¦
 			//if(AxSta(AxBelt[i]) == AXSTA_READY)
 			{
 				if(I_Get(I_BeltSupply[i]) == ON)
 				{
-					my.count++;//¼ÆÊý
-					if(my.count > GUS.Config.Data.SupplyAlmNum)//Èç¹ûÁ¬ÐøÁ½´ÎÀ­Ïßºó²»ÐèÒª¹©Ïß£¬±¨¾¯
+					my.count++;//ï¿½ï¿½ï¿½ï¿½
+					if(my.count > GUS.Config.Data.SupplyAlmNum)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ßºï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½
 					{
 						my.count = 0;
 						if(GCFG.PullAlmEn == 1)
 						{
-							AlarmSetBit(2,0,i);//¶ú´øÓÃÍê
+							AlarmSetBit(2,0,i);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 						}
 					}
 					my.execute = 0;
@@ -873,7 +873,7 @@ void BeltSupply(LogicParaDef *p, s32 i)
 				else
 				{
 					TimerRst(&Tm[i]);
-					Q_Set(Q_BeltSupply[i],ON);//¹©Ïßµç»ú¿ª
+					Q_Set(Q_BeltSupply[i],ON);//ï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½ï¿½
 					//AxRelUnit(AxBelt[i],100,999999);
 					my.count = 0;
 					my.step = 2;
@@ -881,21 +881,21 @@ void BeltSupply(LogicParaDef *p, s32 i)
 			}
 			break;
 			
-		case 2://¹©ÏßÏÂ¸ÐÓ¦ÓÐÐÅºÅ
+		case 2://ï¿½ï¿½ï¿½ï¿½ï¿½Â¸ï¿½Ó¦ï¿½ï¿½ï¿½Åºï¿½
 			if(I_Get(I_BeltSupply[i]) == ON)
 			{
 				//AxStop(AxBelt[i]);
-				Q_Set(Q_BeltSupply[i],OFF);//¹Ø±Õ¹©Ïßµç»ú
+				Q_Set(Q_BeltSupply[i],OFF);//ï¿½Ø±Õ¹ï¿½ï¿½ßµï¿½ï¿½
 				my.execute = 0;
 				my.step = 0;
 			}
-			else if(TimerCnt(&Tm[i],1) >= GDLY.SupplyDelay)//Èç¹û¹©Ïßµç»úÔËÐÐ³¬¹ý¹©ÏßÊ±¼äÄÚ
+			else if(TimerCnt(&Tm[i],1) >= GDLY.SupplyDelay)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ßµï¿½ï¿½ï¿½ï¿½ï¿½Ð³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 			{
 				//AxStop(AxBelt[i]);
-				Q_Set(Q_BeltSupply[i],OFF);//¹Ø±Õ¹©Ïßµç»ú
-				if(GCFG.PullAlmEn == 1)//±¨¾¯¿¨´ø
+				Q_Set(Q_BeltSupply[i],OFF);//ï¿½Ø±Õ¹ï¿½ï¿½ßµï¿½ï¿½
+				if(GCFG.PullAlmEn == 1)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				{
-					AlarmSetBit(2,0,2+i);//¶ú´ø¿¨
+					AlarmSetBit(2,0,2+i);//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				}
 				my.execute = 0;
 				my.step = 0;
@@ -904,7 +904,7 @@ void BeltSupply(LogicParaDef *p, s32 i)
 	}
 }
 
-//³öÁÏ´òÁÏ
+//ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½
 void UnloadHit(LogicParaDef *p)
 {
 	static u32 Tm,I_ExitCheck_Tm,I_ExitCheck_val;
@@ -917,10 +917,10 @@ void UnloadHit(LogicParaDef *p)
 	{
 		I_ExitCheck_val = OFF;
 	}
-	if(TrigOne(&Tr,I_ExitCheck_val == ON && (FSM_STA == RUN || FSM_STA == D_RESET) && GUR.HitReady == 1, 20))//¼ì²â¿ÚÕÖÍ¨¹ýÏÂÁÏ¸ÐÓ¦
+	if(TrigOne(&Tr,I_ExitCheck_val == ON && (FSM_STA == RUN || FSM_STA == D_RESET) && GUR.HitReady == 1, 20))//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½Ó¦
 	{
 		GUS.Product.Data.Cnt++;
-		my.execute = 1;//Ö´ÐÐÒ»´Î´òÁÏ
+		my.execute = 1;//Ö´ï¿½ï¿½Ò»ï¿½Î´ï¿½ï¿½ï¿½
 	}
 	TASK_PROCESS
 	{
@@ -929,7 +929,7 @@ void UnloadHit(LogicParaDef *p)
 			my.step = 2;
 			break;
 		
-		case 2://Æø¸×ÏÂ£¬ÑÓÊ±
+		case 2://ï¿½ï¿½ï¿½ï¿½ï¿½Â£ï¿½ï¿½ï¿½Ê±
 			if(TimerCnt(&Tm,1) >= GDLY.UnloadInp)
 			{
 				//AxRelUnit(AxHit,100,GPOS.UnloadDown);
@@ -940,7 +940,7 @@ void UnloadHit(LogicParaDef *p)
 			}
 			break;
 		
-		case 3:////ÑÓÊ±ÍêÁËÆø¸×ÉÏ
+		case 3:////ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			if(TimerCnt(&Tm,1) >= GDLY.UnloadOnDelay ) //&& AxSta(AxHit) == AXSTA_READY)
 			{
 				//AxAbsUnit(AxHit,100,GPOS.UnloadUp);
@@ -950,18 +950,18 @@ void UnloadHit(LogicParaDef *p)
 			}
 			break;
 			
-		case 4://ÑÓÊ±ºó½áÊø£¬¼¼Êõ¹»ÁËÖ´ÐÐÒ»´ÎÆ¤´ø
+		case 4://ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½Ò»ï¿½ï¿½Æ¤ï¿½ï¿½
 			if(TimerCnt(&Tm,1) >= GDLY.UnloadOffDelay)// && AxSta(AxHit) == AXSTA_READY)
 			{
 				my.execute = 0;
 				my.step = 0;
 				my.count ++;
-				if(my.count >= GCFG.UnloadPackNum)//ÊýÁ¿´óÓÚ´ò°üÊýÁ¿
+				if(my.count >= GCFG.UnloadPackNum)//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				{
 					my.count = 0;
 					if(GCFG.UnloadPackNum > 0)
 					{
-						LT.UnloadBeltTask.execute = 1;//Ö´ÐÐÒ»´ÎÆ¤´ø¶¯
+						LT.UnloadBeltTask.execute = 1;//Ö´ï¿½ï¿½Ò»ï¿½ï¿½Æ¤ï¿½ï¿½ï¿½ï¿½
 					}
 				}
 			}
@@ -969,7 +969,7 @@ void UnloadHit(LogicParaDef *p)
 	}
 }
 
-//³öÁÏÆ¤´ø
+//ï¿½ï¿½ï¿½ï¿½Æ¤ï¿½ï¿½
 void UnloadBelt(LogicParaDef *p)
 {
 	static u32 tm;
@@ -980,7 +980,7 @@ void UnloadBelt(LogicParaDef *p)
 			my.step = 2;
 			break;
 		
-		case 2://Æô¶¯Æ¤´ø
+		case 2://ï¿½ï¿½ï¿½ï¿½Æ¤ï¿½ï¿½
 			if(TimerCnt(&tm,1) > 100)
 			{
 				Q_Set(Q_CollectMotor,ON);
@@ -989,7 +989,7 @@ void UnloadBelt(LogicParaDef *p)
 			}
 			break;
 		
-		case 3://ÑÓÊ±ºó¹Ø±Õ
+		case 3://ï¿½ï¿½Ê±ï¿½ï¿½Ø±ï¿½
 			if(TimerCnt(&tm,1) > GDLY.UnloadBeltTime)
 			{
 				Q_Set(Q_CollectMotor,OFF);
@@ -1002,7 +1002,7 @@ void UnloadBelt(LogicParaDef *p)
 
 
 
-//Öá»ØÁã+Ô¤±¸Î»
+//ï¿½ï¿½ï¿½ï¿½ï¿½+Ô¤ï¿½ï¿½Î»
 void AxGohomeReady(LogicParaDef *p,u32 i)
 {
 	TASK_PROCESS
@@ -1067,7 +1067,7 @@ void AxGohomeReady(LogicParaDef *p,u32 i)
 	}
 }
 
-//±¾Ó¦ÓÃµÄÖáÅäÖÃ
+//ï¿½ï¿½Ó¦ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 void AxisDataConfig()
 {
 	GSS.axis[0].Axhomecfg.orglev = OFF;
@@ -1135,18 +1135,18 @@ void AxisDataConfig()
 	}
 }
 
-//±¾Éè±¸µÄ°´Å¥²Ù×÷
+//ï¿½ï¿½ï¿½è±¸ï¿½Ä°ï¿½Å¥ï¿½ï¿½ï¿½ï¿½
 void DeviceBtn()
 {
 	GCFG.AutoOrManual = 0;
 	static TrigDef Tr_Start,Tr_Stop,Tr_Scram,Tr_Reset;
 	static u32 Tm_Scram;
-	//¸´Î»Ç°£¬°´Å¥Ö´ÐÐ¸´Î»£¬¸´Î»ºó£¬°´Å¥ÔËÐÐ
+	//ï¿½ï¿½Î»Ç°ï¿½ï¿½ï¿½ï¿½Å¥Ö´ï¿½Ð¸ï¿½Î»ï¿½ï¿½ï¿½ï¿½Î»ï¿½ó£¬°ï¿½Å¥ï¿½ï¿½ï¿½ï¿½
 	if(TrigOne(&Tr_Start,I_Get(I_Start) == ON,50))
 	{
 		if(GUR.HaveToReset == 0 && LT.ManualPullTask.execute == 0)
 		{
-			if(GCFG.AutoOrManual == 0)//0:×Ô¶¯£¬1£ºÊÖ¶¯
+			if(GCFG.AutoOrManual == 0)//0:ï¿½Ô¶ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½Ö¶ï¿½
 			{					
 				FSM_CMD = RUN;			
 			}
@@ -1156,13 +1156,13 @@ void DeviceBtn()
 			}
 		}
 	}
-	//¸´Î»Ç°£¬°´Å¥Ö´ÐÐ¸´Î»£¬¸´Î»ºó£¬°´Å¥Í£Ö¹
+	//ï¿½ï¿½Î»Ç°ï¿½ï¿½ï¿½ï¿½Å¥Ö´ï¿½Ð¸ï¿½Î»ï¿½ï¿½ï¿½ï¿½Î»ï¿½ó£¬°ï¿½Å¥Í£Ö¹
 	if(TrigOne(&Tr_Stop,I_Get(I_Stop) == OFF,50))
 	{
 		
 		if(GUR.HaveToReset == 0 && LT.ManualPullTask.execute == 0)
 		{
-			if(GCFG.AutoOrManual == 0)//0:×Ô¶¯£¬1£ºÊÖ¶¯
+			if(GCFG.AutoOrManual == 0)//0:ï¿½Ô¶ï¿½ï¿½ï¿½1ï¿½ï¿½ï¿½Ö¶ï¿½
 			{					
 				if(FSM_STA == RUN)
 				{
@@ -1175,17 +1175,17 @@ void DeviceBtn()
 			}
 		}
 	}
-	//¸´Î»°´Å¥
+	//ï¿½ï¿½Î»ï¿½ï¿½Å¥
 	if(TrigOne(&Tr_Reset,I_Get(I_Reset) == ON,50))
 	{
 		FSM_CMD = D_RESET;
 	}
-	//¼±Í£µ¯Æð
+	//ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½
 	if(TrigOne(&Tr_Scram,I_Get(I_Scram) == ON,50))
 	{
 		FSM_CMD = STOP;
 	}
-	//¼±Í£ÅÄÏÂ
+	//ï¿½ï¿½Í£ï¿½ï¿½ï¿½ï¿½
 	if(TimerCnt(&Tm_Scram,I_Get(I_Scram) == OFF) > 50)
 	{
 		GUR.HaveToReset = 1;
@@ -1196,7 +1196,7 @@ void DeviceBtn()
 		FSM_CMD = SCRAM;
 	}
 }
-//±¾Éè±¸µã¶¯ÅäÖÃ
+//ï¿½ï¿½ï¿½è±¸ï¿½ã¶¯ï¿½ï¿½ï¿½ï¿½
 void DeviceJogSet()
 {
 	GSW.jogSpd = 5;
@@ -1227,17 +1227,17 @@ void DeviceJogSet()
 		}
 	}
 }
-//¼±Í£ºóÖ´ÐÐÒ»´Î
+//ï¿½ï¿½Í£ï¿½ï¿½Ö´ï¿½ï¿½Ò»ï¿½ï¿½
 void scram_handle()
 {
 	GUR.HaveToReset = 1;
 //	Q_Set(Q_MaskSupply,OFF);
 //	Q_Set(Q_ExitMotor,OFF);
-//	Q_Set(Q_FeedBelt,OFF);//½øÁÏµç»ú
+//	Q_Set(Q_FeedBelt,OFF);//ï¿½ï¿½ï¿½Ïµï¿½ï¿½
 //	Q_Set(Q_BeltSupplyL,OFF);
 //	Q_Set(Q_BeltSupplyR,OFF);
 //	Q_Set(Q_CollectMotor,OFF);
-	for (int i = 0; i < GPO_NUM; i++) //³õÊ¼»¯ Êä³ö¿Ú
+	for (int i = 0; i < GPO_NUM; i++) //ï¿½ï¿½Ê¼ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
 	{
         OutPut_SetSta(i, OFF);
 	}
@@ -1248,12 +1248,12 @@ void scram_handle()
 	PARAINIT(LT);
 }
 
-//Æô¶¯ºóÖ´ÐÐÒ»´Î
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½Ò»ï¿½ï¿½
 void start_handle()
 {
 	PARAINIT(DeveceUph);
 }
-//Í£Ö¹ºóÖ´ÐÐÒ»´Î
+//Í£Ö¹ï¿½ï¿½Ö´ï¿½ï¿½Ò»ï¿½ï¿½
 void stop_handle()
 {
 	Q_Set(Q_MaskSupply,OFF);
@@ -1265,16 +1265,16 @@ void Call(LogicParaDef *p)
 	int i;
 	for(i=0;i<=6;i++)
 	{
-	  LT.AxGohomeReady[i].execute=1;//		6¸öÖáÈ«²¿»Øµ½Áãµã
+	  LT.AxGohomeReady[i].execute=1;//		6ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½
 	}
-  LT.PullTask.execute=1;//	½øÐÐÀ­ÏßÈÎÎñ
-	LT.PickTask.execute=1;//	½øÐÐÈ¡ÏßÈÎÎñ£¬¶ÔÈ¡ÏßÈÎÎñ°´Ô¤¶¨ÒªÇó½øÐÐÐÞ¸Ä
+  LT.PullTask.execute=1;//	ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	LT.PickTask.execute=1;//	ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ñ£¬¶ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¤ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½
 }
 
 void AllGohome()
 {
 	int i,j=1;
-	for(i=0;i<=6;)    //	6¸öÖáÈ«²¿»Øµ½Áãµã
+	for(i=0;i<=6;)    //	6ï¿½ï¿½ï¿½ï¿½È«ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½
 	{
 		
 	switch(j)
@@ -1329,7 +1329,7 @@ void AllGohome()
 						break;
 	}
   }	
-	LT.Pickline.execute=1;//	È«¶¼»Øµ½Áãµãºó¿ªÊ¼È¡Ïß
+	LT.Pickline.execute=1;//	È«ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½ï¿½ï¿½Ê¼È¡ï¿½ï¿½
 }
 void Pickline(LogicParaDef *p)
 {
@@ -1337,13 +1337,13 @@ void Pickline(LogicParaDef *p)
 	static u32 Tm2;
 	TASK_PROCESS
 	{
-		case 1://			À­ÏßÆø¸×ÕÅ¿ª²¢µ½È¡ÏßÎ»
+		case 1://			ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Å¿ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½Î»
 		  Q_Set(Q_PullClamp,OFFR);
 		  TimerRst(&Tm);
 		  AxAbsUnit(AxPull,GSPD,GPOS.PullTake);
 		  my.step = 2;
 		  break;
-		case 2://			¼ÐÏß
+		case 2://			ï¿½ï¿½ï¿½ï¿½
 			if(AxSta(AxPull) == AXSTA_READY&&TimerCnt(&Tm,1) >= GDLY.PullClampOffDelay)
 			{
 				Q_Set(Q_PullClamp,ONR);
@@ -1351,7 +1351,7 @@ void Pickline(LogicParaDef *p)
 				my.step = 3;
 			}
 			break;
-		case 3://			¼Ðµ½ÏßºóÑ¹´øÆø¸×´ò¿ª
+		case 3://			ï¿½Ðµï¿½ï¿½ßºï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½×´ï¿½
 			if(TimerCnt(&Tm,1)>= GDLY.PullClampOnDelay)
 			{
 				Q_Set(Q_Press,ONR);
@@ -1359,14 +1359,14 @@ void Pickline(LogicParaDef *p)
 				my.step = 4;
 			}
 			break;
-		case 4://			À­ÏßÆø¸×»Øµ½»ØÍËÎ»
+		case 4://			ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×»Øµï¿½ï¿½ï¿½ï¿½ï¿½Î»
 			if(TimerCnt(&Tm,1)>= GDLY.PressOnDelay)
 			{
 				AxAbsUnit(AxPull,GSPD,GPOS.PullBack);
 				my.step = 5;
 			}
 			break;
-		case 5://			Ö÷¼Üµ½È¡ÏßÎ»Ñ¹´øÆø¸×Ñ¹Ïß
+		case 5://			ï¿½ï¿½ï¿½Üµï¿½È¡ï¿½ï¿½Î»Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¹ï¿½ï¿½
 			if(AxSta(AxPull) == AXSTA_READY)
 			{
 				AxAbsUnit(AxPickZ,GSPD,GPOS.PickZTake);
@@ -1375,7 +1375,7 @@ void Pickline(LogicParaDef *p)
 				my.step =6;
 			}
 			break;
-		case 6://			4¸öÈ¡Ïß¼Ð×ÓÕÅ¿ª
+		case 6://			4ï¿½ï¿½È¡ï¿½ß¼ï¿½ï¿½ï¿½ï¿½Å¿ï¿½
 			if(AxSta(AxPickZ) == AXSTA_READY&&TimerCnt(&Tm,1)>= GDLY.PressOffDelay)
 			{
 				Q_Set(Q_PickClamp,OFFR);
@@ -1384,7 +1384,7 @@ void Pickline(LogicParaDef *p)
 				my.step =7;
 			}        
 			break;
-		case 7://			4¸öÈ¡Ïß¼Ð×Ó¼Ð½ô
+		case 7://			4ï¿½ï¿½È¡ï¿½ß¼ï¿½ï¿½Ó¼Ð½ï¿½
 			if(TimerCnt(&Tm,1)>=GDLY.PickClampOffDelay)
 			{
 				Q_Set(Q_PickClamp,ONR);
@@ -1393,7 +1393,7 @@ void Pickline(LogicParaDef *p)
 				my.step =8;
 			}
 			break;
-		case 8://			¼ôÏß
+		case 8://			ï¿½ï¿½ï¿½ï¿½
 			if(TimerCnt(&Tm,1)>=GDLY.PickClampOnDelay)
 			{
 				Q_Set(Q_Cut,ONR);
@@ -1401,7 +1401,7 @@ void Pickline(LogicParaDef *p)
 				my.step =9;
 			}
 			break;
-		case 9://			ÑÓÊ±¼ôÏß²¢ÇÒÀ­Ïß¼Ð×ÓÕÅ¿ª
+		case 9://			ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ß²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½ï¿½ï¿½ï¿½Å¿ï¿½
 			if(TimerCnt(&Tm,1)>=GDLY.CutOnDelay)
 			{
 				Q_Set(Q_Cut,OFFR);
@@ -1411,14 +1411,14 @@ void Pickline(LogicParaDef *p)
 				my.step =10;
 			}
 			break;
-		case 10://			Ö÷¼Üµ½·ÅÏßÎ»
+		case 10://			ï¿½ï¿½ï¿½Üµï¿½ï¿½ï¿½ï¿½ï¿½Î»
 			if(TimerCnt(&Tm,1)>=GDLY.CutOffDelay&&TimerCnt(&Tm,1)>=GDLY.PullClampOffDelay)
 			{
 				AxAbsUnit(AxPickZ,GSPD,GPOS.PickZPut);
 				my.step=11;
 			}
 			break;
-		case 11://			È¡Ïß¼Ð×ÓÕÅ¿ª£¬·ÅÏß
+		case 11://			È¡ï¿½ß¼ï¿½ï¿½ï¿½ï¿½Å¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			if(AxSta(AxPickZ) == AXSTA_READY)
 			{
 				Q_Set(Q_PickClamp,OFFR);
@@ -1427,7 +1427,7 @@ void Pickline(LogicParaDef *p)
 				my.step =12;
 			}
 			break;
-		case 12://			È¡ÏßÈÎÎñÍê³É
+		case 12://			È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			if(TimerCnt(&Tm,1)>=GDLY.PickClampOffDelay)
 			{
 				LT.Pickline.execute=0;
@@ -1437,30 +1437,30 @@ void Pickline(LogicParaDef *p)
 }
 
 //2020.7.20
-//Éè±¸Âß¼­Ñ­»·TimerRst(&Tm);
+//ï¿½è±¸ï¿½ß¼ï¿½Ñ­ï¿½ï¿½TimerRst(&Tm);
 void Logic()
 {
-	AxisDataConfig();				//±¾ÏîÄ¿ÓÃµÄÖáÅäÖÃ·½Ê½
-	DeviceJogSet();					//±¾ÏîÄ¿µã¶¯ÉèÖÃ
-	DeviceBtn();					//±¾Éè±¸µÄ°´Å¥²Ù×÷
+	AxisDataConfig();				//ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã·ï¿½Ê½
+	DeviceJogSet();					//ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ã¶¯ï¿½ï¿½ï¿½ï¿½
+	DeviceBtn();					//ï¿½ï¿½ï¿½è±¸ï¿½Ä°ï¿½Å¥ï¿½ï¿½ï¿½ï¿½
 	
-    /******¹¤³ÌÔËÐÐÂß¼­*******/
-	DeviceMain(&LT.DeviceMainTask);			//Éè±¸Ö÷Á÷³Ì
-	Pick(&LT.PickTask);						//È¡Ïß£¬È¡À­ºÃµÄÏß£¬µ½º¸Î»ÉÏ·½µÈ´ý
-	Weld(&LT.WeldTask);						//º¸Ïß
-	Pull(&LT.PullTask);						//À­Ïß
-	BeltSupply(&LT.BeltSupplyTask[0],0);	//¹©Ïß×ó
-	BeltSupply(&LT.BeltSupplyTask[1],1);	//¹©ÏßÓÒ
-	UnloadHit(&LT.UnloadHitTask);			//³öÁÏ´òÁÏ
-	UnloadBelt(&LT.UnloadBeltTask);			//³öÁÏÆ¤´ø
+    /******ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß¼ï¿½*******/
+	DeviceMain(&LT.DeviceMainTask);			//ï¿½è±¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	Pick(&LT.PickTask);						//È¡ï¿½ß£ï¿½È¡ï¿½ï¿½ï¿½Ãµï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½Ï·ï¿½ï¿½È´ï¿½
+	Weld(&LT.WeldTask);						//ï¿½ï¿½ï¿½ï¿½
+	Pull(&LT.PullTask);						//ï¿½ï¿½ï¿½ï¿½
+	BeltSupply(&LT.BeltSupplyTask[0],0);	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	BeltSupply(&LT.BeltSupplyTask[1],1);	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	UnloadHit(&LT.UnloadHitTask);			//ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½
+	UnloadBelt(&LT.UnloadBeltTask);			//ï¿½ï¿½ï¿½ï¿½Æ¤ï¿½ï¿½
 	
-	Turn(&LT.TurnTask);						//·­×ª
-	Ultrasonic(&LT.UltrasonicTask[0],0);	//Ç°³¬Éù²¨
-	Ultrasonic(&LT.UltrasonicTask[1],1);	//ºó³¬Éù²¨
-	ManualCutBelt(&LT.ManualCutBeltTask);	//ÊÖ¶¯¼ôÏß
-	ManualPull(&LT.ManualPullTask);			//ÊÖ¶¯À­¶ú´ø
-	ManualFlowFeed(&LT.ManualFlowFeedTask);	//ÊÖ¶¯ÁÏÅÌÇ°ÒÆÒ»¸ñ
-	WeldFrontDetect(&LT.WeldFrontDetectTask);//º¸Ç°¹¤Î»¼ì²â
+	Turn(&LT.TurnTask);						//ï¿½ï¿½×ª
+	Ultrasonic(&LT.UltrasonicTask[0],0);	//Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	Ultrasonic(&LT.UltrasonicTask[1],1);	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	ManualCutBelt(&LT.ManualCutBeltTask);	//ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½
+	ManualPull(&LT.ManualPullTask);			//ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	ManualFlowFeed(&LT.ManualFlowFeedTask);	//ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½Ç°ï¿½ï¿½Ò»ï¿½ï¿½
+	WeldFrontDetect(&LT.WeldFrontDetectTask);//ï¿½ï¿½Ç°ï¿½ï¿½Î»ï¿½ï¿½ï¿½
 	for(int i=0; i<PULS_NUM; i++)
 	{
 		AxGohomeReady(&LT.AxGohomeReady[i],i);
